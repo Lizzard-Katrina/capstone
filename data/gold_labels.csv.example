@@ -1,0 +1,3 @@
+repo,gold_verdict,notes
+owner-repo-abc1234,broken,"pip install 阶段 torch 版本解析失败"
+owner-repo-def5678,runs,"--help 正常,README 命令跑到缺数据"

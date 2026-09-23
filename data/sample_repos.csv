@@ -1,0 +1,7 @@
+paper_id,year,framework,code_url,head_commit,clone_status,path,size_mb,used_default_branch
+acl2017-P17-1092,,none,https://github.com/jiyfeng/disco4textcat,db7a2dce01e74d55049eaa56d46b6960ff1c0c34,success,/home/katrinalinux/prompt_exp/workdir/jiyfeng_disco4textcat/jiyfeng-disco4textcat-db7a2dc,0.0,False
+emnlp2018-D18-1445,,none,https://github.com/ukplab/emnlp2018-april,086bf954f62b2c9d03f04e175324027ed3ac3d99,success,/home/katrinalinux/prompt_exp/workdir/ukplab_emnlp2018-april/UKPLab-emnlp2018-april-086bf95,5.6,False
+acl2019-P19-1145,,tf,https://github.com/vanzytay/quaterniontransformers,b721db425397262bd1f1529bbbfb533123e7076f,success,/home/katrinalinux/prompt_exp/workdir/vanzytay_quaterniontransformers/vanzytay-QuaternionTransformers-b721db4,0.3,False
+coling2020-2020.coling-main.471,,,https://github.com/yukiyakiz/automatic_glossing,3f97e80534a9bab7b46c35d94de6dfef84f0646b,success,/home/katrinalinux/prompt_exp/workdir/yukiyakiz_automatic_glossing/yukiyakiZ-Automatic_Glossing-3f97e80,0.6,False
+eacl2021-2021.eacl-main.219,,tf,https://github.com/jameshargreaves12/incremental_beam_manipulation,2ffbcef16910b2d7746e2849ea9b7b256dc26371,success,/home/katrinalinux/prompt_exp/workdir/jameshargreaves12_incremental_beam_manipulation/jamesHargreaves12-incremental_beam_manipulation-2ffbcef,12.0,False
+emnlp2022-2022.emnlp-main.350,,pytorch,https://github.com/microsoft/contextualsp,369743e32ccfb47a7e2eefa7ac2d9be46d874696,success,/home/katrinalinux/prompt_exp/workdir/microsoft_contextualsp/microsoft-ContextualSP-369743e,507.4,False

@@ -1,0 +1,15 @@
+# Experiment knobs. Keep the pilot small first.
+sample_size: 25
+repeats: 3
+max_tool_calls: 30          # hard ceiling on agent tool-use rounds
+command_timeout_sec: 120    # default per-command cap inside sandbox
+install_timeout_sec: 900    # pip install can be slow
+help_timeout_sec: 30        # T2 --help / import probe
+readme_cmd_timeout_sec: 180 # T3, killed and marked "timeout" after this
+temperature: 0
+variants:
+  - v0_baseline
+  - v1_minimal
+  - v2_inline_constraints
+  - v3_stepwise
+  - v4_strict_tone

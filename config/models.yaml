@@ -1,0 +1,8 @@
+# OpenRouter model ids. Start with 2, expand later.
+models:
+  - id: "anthropic/claude-sonnet-4.5"
+    short: "sonnet45"
+  - id: "openai/gpt-4.1"
+    short: "gpt41"
+  # - id: "google/gemini-2.5-pro"
+  #   short: "gemini25pro"
