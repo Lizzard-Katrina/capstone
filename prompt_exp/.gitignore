@@ -1,0 +1,8 @@
+.env
+workdir/
+results/
+logs/
+__pycache__/
+*.pyc
+.venv/
+data/gold_labels.csv
