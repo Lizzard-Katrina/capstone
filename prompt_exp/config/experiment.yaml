@@ -1,15 +1,16 @@
-# Experiment knobs. Keep the pilot small first.
+# Claude Code 版实验参数。token 相关已移除(订阅制下不关心)。
 sample_size: 25
 repeats: 3
-max_tool_calls: 30          # hard ceiling on agent tool-use rounds
-command_timeout_sec: 120    # default per-command cap inside sandbox
-install_timeout_sec: 900    # pip install can be slow
-help_timeout_sec: 30        # T2 --help / import probe
-readme_cmd_timeout_sec: 180 # T3, killed and marked "timeout" after this
-temperature: 0
+max_tool_calls: 40          # 写进 prompt 的软上限
+session_timeout_sec: 2400   # 单个仓库整体超时(40 分钟),硬杀
 variants:
+  - v5_refined              # 主力
   - v0_baseline
   - v1_minimal
   - v2_inline_constraints
   - v3_stepwise
   - v4_strict_tone
+models:
+  - null                    # 用 Claude Code 默认模型
+  # - sonnet
+  # - opus

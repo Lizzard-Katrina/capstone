@@ -1,0 +1,28 @@
+{
+  "run_id": "9480af56",
+  "repo": "jiyfeng-disco4textcat-db7a2dc",
+  "variant": "v0_baseline",
+  "model": "anthropic/claude-sonnet-4.5",
+  "tokens": {
+    "input": 108869,
+    "output": 1354,
+    "total": 110223
+  },
+  "tool_call_count_actual": 15,
+  "hit_iteration_limit_actual": false,
+  "blocked_write_attempts_actual": [],
+  "elapsed_sec": 372.6,
+  "venv": {
+    "ok": true,
+    "used_uv": false,
+    "stderr": ""
+  },
+  "gpu_probe": {
+    "torch": null,
+    "cuda_available": null,
+    "err": "No module named 'torch'"
+  },
+  "agent_final_text": "[API 调用失败] ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+  "agent_parsed_json": null,
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v0_baseline__anthropic-claude-sonnet-4.5__jiyfeng-disco4textcat-db7a2dc__9480af56.jsonl"
+}

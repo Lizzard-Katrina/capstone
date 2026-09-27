@@ -1,22 +1,25 @@
 """
-汇总: 把所有 (变体 x 模型) 的结果拉到一张表,算 token、准确率、违规率、稳定性。
+汇总: 比较不同 prompt 变体 / 模型的判定质量。
+
+已去掉 token 统计(订阅制下不关心),改为关注:
+- verdict 分布与一致性
+- 核验通过率(agent 有没有谎报)
+- 约束违反率
+- 变体之间的分歧(这些仓库值得人工核实)
 
 用法:
-    python -m src.analyze --results results/ --gold data/gold_labels.csv
+    python -m src.analyze
+    python -m src.analyze --gold data/gold_labels.csv
 """
 from __future__ import annotations
 
 import argparse
 import json
-from collections import defaultdict
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-
-# 6000 个仓库全量外推用
-FULL_SCALE = 6000
 
 
 def collect(results_dir: Path) -> pd.DataFrame:
@@ -36,28 +39,31 @@ def collect(results_dir: Path) -> pd.DataFrame:
             rec = json.loads(f.read_text(encoding="utf-8"))
             parsed = rec.get("agent_parsed_json") or {}
             v = verif.get(rec.get("run_id"), {})
+            issue_types = [i["type"] for i in v.get("issues", [])]
             rows.append({
                 "variant": rec.get("variant"),
                 "model": rec.get("model"),
                 "repo": rec.get("repo"),
                 "run_id": rec.get("run_id"),
-                "tok_in": rec["tokens"]["input"],
-                "tok_out": rec["tokens"]["output"],
-                "tok_total": rec["tokens"]["total"],
-                "tool_calls": rec.get("tool_call_count_actual"),
-                "hit_limit": rec.get("hit_iteration_limit_actual"),
-                "elapsed_sec": rec.get("elapsed_sec"),
-                "blocked_writes": len(rec.get("blocked_write_attempts_actual") or []),
                 "verdict": parsed.get("overall_verdict"),
                 "parsed_ok": bool(parsed),
+                "tool_calls": rec.get("tool_call_count_actual"),
+                "elapsed_sec": rec.get("elapsed_sec"),
+                "returncode": rec.get("returncode"),
                 "n_issues": v.get("n_issues"),
                 "trustworthy": v.get("trustworthy"),
+                "tried_to_write": any(
+                    t in issue_types
+                    for t in ("blocked_write_attempt", "shell_write_attempt")),
+                "extra_install": "extra_package_install" in issue_types,
+                "bad_entry_script": "non_python_entry_script" in issue_types,
+                "install_status": (parsed.get("install") or {}).get("status"),
+                "n_entry_scripts": len(parsed.get("entry_scripts") or []),
             })
     return pd.DataFrame(rows)
 
 
 def summarize(df: pd.DataFrame, gold: pd.DataFrame | None) -> pd.DataFrame:
-    """每个 (变体, 模型) 一行。"""
     if gold is not None and not gold.empty:
         df = df.merge(gold[["repo", "gold_verdict"]], on="repo", how="left")
         df["correct"] = df["verdict"] == df["gold_verdict"]
@@ -65,37 +71,29 @@ def summarize(df: pd.DataFrame, gold: pd.DataFrame | None) -> pd.DataFrame:
         df["correct"] = pd.NA
 
     g = df.groupby(["variant", "model"])
-    out = pd.DataFrame({
+    return pd.DataFrame({
         "n_runs": g.size(),
-        "tok_total_mean": g["tok_total"].mean().round(0),
-        "tok_total_median": g["tok_total"].median().round(0),
-        "tok_total_p90": g["tok_total"].quantile(0.9).round(0),
-        "tool_calls_mean": g["tool_calls"].mean().round(1),
-        "hit_limit_rate": g["hit_limit"].mean().round(3),
-        "elapsed_mean": g["elapsed_sec"].mean().round(1),
         "parsed_ok_rate": g["parsed_ok"].mean().round(3),
         "trustworthy_rate": g["trustworthy"].mean().round(3),
-        "blocked_write_rate": (g["blocked_writes"].apply(lambda s: (s > 0).mean())).round(3),
+        "tried_to_write_rate": g["tried_to_write"].mean().round(3),
+        "extra_install_rate": g["extra_install"].mean().round(3),
+        "bad_entry_rate": g["bad_entry_script"].mean().round(3),
+        "tool_calls_mean": g["tool_calls"].mean().round(1),
+        "elapsed_mean": g["elapsed_sec"].mean().round(1),
         "accuracy": g["correct"].mean().round(3),
     }).reset_index()
 
-    # 外推全量成本(token 数,不含单价;单价按你选的模型另算)
-    out["tok_full_scale_est"] = (out["tok_total_mean"] * FULL_SCALE).astype("Int64")
-    return out
-
 
 def stability(df: pd.DataFrame) -> pd.DataFrame:
-    """同一 (变体,模型,仓库) 重复跑的一致性。"""
-    g = df.groupby(["variant", "model", "repo"])
+    """同一 (变体,模型,仓库) 重复跑的结论一致性。"""
     rows = []
-    for key, sub in g:
+    for key, sub in df.groupby(["variant", "model", "repo"]):
         if len(sub) < 2:
             continue
         rows.append({
             "variant": key[0], "model": key[1], "repo": key[2],
             "n": len(sub),
             "verdict_consistent": sub["verdict"].nunique() == 1,
-            "tok_cv": round(sub["tok_total"].std() / max(sub["tok_total"].mean(), 1), 3),
         })
     if not rows:
         return pd.DataFrame()
@@ -103,8 +101,21 @@ def stability(df: pd.DataFrame) -> pd.DataFrame:
     return s.groupby(["variant", "model"]).agg(
         repos_with_repeats=("repo", "count"),
         verdict_consistency=("verdict_consistent", "mean"),
-        token_cv_mean=("tok_cv", "mean"),
     ).round(3).reset_index()
+
+
+def disagreements(df: pd.DataFrame) -> pd.DataFrame:
+    """不同变体对同一仓库给出不同结论 —— 这些值得人工核实。"""
+    rows = []
+    for repo, sub in df.groupby("repo"):
+        verdicts = sub["verdict"].dropna().unique()
+        if len(verdicts) > 1:
+            detail = sub.groupby("variant")["verdict"].apply(
+                lambda s: "/".join(sorted(set(s.dropna())))
+            ).to_dict()
+            rows.append({"repo": repo, "verdicts": list(verdicts),
+                         "by_variant": detail})
+    return pd.DataFrame(rows)
 
 
 def main():
@@ -121,23 +132,32 @@ def main():
     gold_path = Path(args.gold)
     gold = pd.read_csv(gold_path) if gold_path.exists() else None
     if gold is None:
-        print(f"[提示] 没有找到 {gold_path},准确率一列会是空的\n")
+        print(f"[提示] 没有 {gold_path},accuracy 一列为空\n")
 
     print("=" * 70)
     print("按 (变体 x 模型) 汇总")
     print("=" * 70)
-    summ = summarize(df, gold)
-    print(summ.to_string(index=False))
+    print(summarize(df, gold).to_string(index=False))
 
     print("\n" + "=" * 70)
-    print("稳定性(重复跑的一致性)")
+    print("结论稳定性(重复跑)")
     print("=" * 70)
     st = stability(df)
-    print(st.to_string(index=False) if not st.empty else "(没有重复运行的数据)")
+    print(st.to_string(index=False) if not st.empty else "(没有重复运行)")
+
+    print("\n" + "=" * 70)
+    print("变体之间有分歧的仓库(优先人工核实这些)")
+    print("=" * 70)
+    dis = disagreements(df)
+    if dis.empty:
+        print("(没有分歧,或样本太少)")
+    else:
+        for _, r in dis.iterrows():
+            print(f"  {r['repo']}: {r['by_variant']}")
 
     out_dir = Path(args.results)
-    summ.to_csv(out_dir / "_summary.csv", index=False)
     df.to_csv(out_dir / "_raw.csv", index=False)
+    summarize(df, gold).to_csv(out_dir / "_summary.csv", index=False)
     print(f"\n写入 {out_dir / '_summary.csv'} 和 _raw.csv")
 
 

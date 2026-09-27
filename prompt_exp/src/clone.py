@@ -206,6 +206,9 @@ def main():
             "framework": row.get("framework"),
             "code_url": row.get("code_url"),
             "head_commit": row.get("head_commit"),
+            "paper_url": row.get("paper_url"),
+            "arxiv_id": row.get("arxiv_id"),
+            "title": row.get("title"),
         }
         if not parsed:
             rec["clone_status"] = "bad_url"

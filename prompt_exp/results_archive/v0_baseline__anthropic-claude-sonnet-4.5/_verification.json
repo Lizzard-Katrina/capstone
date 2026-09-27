@@ -1,0 +1,30 @@
+[
+  {
+    "run_id": "74e4ef2e",
+    "repo": "jiyfeng-disco4textcat-db7a2dc",
+    "variant": "v0_baseline",
+    "model": "anthropic/claude-sonnet-4.5",
+    "n_issues": 1,
+    "issues": [
+      {
+        "type": "script_verdict_without_execution",
+        "detail": "声称测过 cxxcode/main.cc 并给出 failed,但 trace 里没跑过"
+      }
+    ],
+    "trustworthy": false
+  },
+  {
+    "run_id": "9480af56",
+    "repo": "jiyfeng-disco4textcat-db7a2dc",
+    "variant": "v0_baseline",
+    "model": "anthropic/claude-sonnet-4.5",
+    "n_issues": 1,
+    "issues": [
+      {
+        "type": "no_valid_json",
+        "detail": "agent 最终没有给出可解析的 JSON"
+      }
+    ],
+    "trustworthy": false
+  }
+]
