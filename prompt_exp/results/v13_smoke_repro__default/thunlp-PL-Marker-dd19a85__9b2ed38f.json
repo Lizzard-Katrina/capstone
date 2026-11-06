@@ -1,0 +1,369 @@
+{
+  "run_id": "9b2ed38f",
+  "repo": "thunlp-PL-Marker-dd19a85",
+  "variant": "v13_smoke_repro",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 2133.6,
+  "n_events": 270,
+  "tool_call_count_actual": 36,
+  "num_turns": 37,
+  "total_cost_usd": 1.188115,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "session_timed_out": false,
+  "leftover_containers_killed": [],
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la; echo ---; cat README.md | head -150"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls /tmp; docker --version; nvidia-smi 2>&1 | head -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat requirement.txt; echo ---; ls scripts; echo ---; cat scripts/run_train_ner_PLMarker.sh; echo ---; ls transformers; cat transformers/setup.py | grep -A5 python_requires; echo ---; sed -n 150,220p README.md"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"apex\\|amp\" run_acener.py | head -20; echo ---; grep -rn \"openai\\|api_key\\|requests.get\\|tweepy\" *.py | head"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp && curl -sIL http://nlp.cs.washington.edu/sciIE/data/sciERC_processed.tar.gz | grep -i \"HTTP/\\|content-length\\|content-type\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"apex\\|fp16\" run_acener.py | head -20"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/plm && cd /tmp/plm && (curl -sL -o sci.tar.gz http://nlp.cs.washington.edu/sciIE/data/sciERC_processed.tar.gz && tar tzf sci.tar.gz | head -20) > /tmp/plm/dl.log 2>&1; tail -25 /tmp/plm/dl.log; ls -la /tmp/plm",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la /tmp/plm; nvidia-smi --query-gpu=name,memory.total --format=csv"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/plm && curl -sL -C - -o sci.tar.gz http://nlp.cs.washington.edu/sciIE/data/sciERC_processed.tar.gz && tar tzf sci.tar.gz | grep -i json | head",
+        "timeout": 600000,
+        "run_in_background": true
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker images | head -20"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker images | grep -i -E \"pytorch|tensor|python\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/plm/bert_models/scibert_scivocab_uncased && cd /tmp/plm/bert_models/scibert_scivocab_uncased && for f in pytorch_model.bin vocab.txt config.json; do curl -sL -O https://huggingface.co/allenai/scibert_scivocab_uncased/resolve/main/$f; done; ls -la",
+        "timeout": 600000,
+        "run_in_background": true
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cp -r /home/katrinalinux/prompt_exp/workdir/thunlp_pl-marker/thunlp-PL-Marker-dd19a85 /tmp/plm/repo && chmod -R u+w /tmp/plm/repo && ls /tmp/plm/repo; du -sh /tmp/plm/sci.tar.gz"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/plm && docker run --name plmsetup -v /tmp/plm:/work -w /work/repo pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime bash -c \"pip install -q tqdm tensorboardX seqeval==1.2.2 && pip install -q --editable ./transformers && python -c 'import transformers;print(transformers.__version__)'\" 2>&1 | tail -20",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm plmsetup >/dev/null; grep -n \"tokenizers\\|install_requires\" -A12 /tmp/plm/repo/transformers/setup.py | sed -n 1,40p"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "du -sh /tmp/plm/sci.tar.gz; ls -la /tmp/plm/bert_models/scibert_scivocab_uncased 2>/dev/null"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/plm && docker run --name plmsetup8 -v /tmp/plm:/work -w /work/repo python:3.8 bash -c \"pip install -q torch --index-url https://download.pytorch.org/whl/cpu && pip install -q tqdm tensorboardX seqeval==1.2.2 && pip install -q --editable ./transformers && python -c 'import transformers,torch;print(transformers.__version__, torch.__version__)'\" 2>&1 | tail -15",
+        "timeout": 1200000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm -f plmsetup8 >/dev/null; docker run --name plmsetup8 -v /tmp/plm:/work -w /work/repo python:3.8 bash -c \"pip install -q torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu && pip install -q tqdm tensorboardX seqeval==1.2.2 && pip install -q --editable ./transformers && python -c 'import transformers,torch;print(transformers.__version__, torch.__version__)'\" 2>&1 | tail -15",
+        "timeout": 1800000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la /tmp/plm/bert_models/scibert_scivocab_uncased; du -sh /tmp/plm/sci.tar.gz"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm -f plmsetup8 >/dev/null 2>&1; docker run --name plmsetup8 -v /tmp/plm:/work -w /work/repo python:3.8 bash -c \"pip install -q --retries 10 --timeout 120 torch==2.4.1+cpu --index-url https://download.pytorch.org/whl/cpu && pip install -q --retries 10 tqdm tensorboardX seqeval==1.2.2 && pip install -q --retries 10 --editable ./transformers && python -c 'import transformers,torch;print(transformers.__version__, torch.__version__)'\" 2>&1 | tail -12",
+        "timeout": 1800000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm -f plmsetup8 >/dev/null 2>&1; docker run --name plmsetup8 -v /tmp/plm:/work -w /work/repo python:3.8 bash -c \"pip install -q --retries 10 --timeout 120 torch==2.4.1 --extra-index-url https://download.pytorch.org/whl/cpu && pip install -q --retries 10 tqdm tensorboardX seqeval==1.2.2 && pip install -q --retries 10 --editable ./transformers && python -c 'import transformers,torch;print(transformers.__version__, torch.__version__)'\" 2>&1 | tail -12",
+        "timeout": 1800000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker commit plmsetup8 plm:py38 >/dev/null && docker rm -f plmsetup8 >/dev/null && echo committed; du -sh /tmp/plm/sci.tar.gz"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl -s \"https://huggingface.co/api/datasets?search=scierc\" | head -c 1500; echo; curl -s \"https://huggingface.co/api/models?search=scierc\" | head -c 600"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until [ -f /tmp/plm/done ] || tar tzf /tmp/plm/sci.tar.gz >/dev/null 2>&1; do sleep 60; done; echo ok; du -sh /tmp/plm/sci.tar.gz",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sleep 1; du -sh /tmp/plm/sci.tar.gz; cat /tmp/claude-1000/*/*/tasks/bhlr8aloy.output 2>/dev/null | tail -5",
+        "timeout": 120000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/plm && mkdir -p part && tar xzf sci.tar.gz -C part 2>&1 | tail -2; find part -maxdepth 3 | head -30; du -sh part",
+        "timeout": 300000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/plm/part/processed_data/json && wc -l *.json && ls -la && python3 -c \"\nimport json\nfor f in ['train.json','dev.json','test.json']:\n    n=0\n    for l in open(f):\n        d=json.loads(l); n+=1\n    print(f,n,list(d.keys()))\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "pkill -f sciERC_processed; mkdir -p /tmp/plm/scierc && cp /tmp/plm/part/processed_data/json/*.json /tmp/plm/scierc/; grep -n \"max_steps\" /tmp/plm/repo/run_acener.py | head -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/plm/scierc && cp /tmp/plm/part/processed_data/json/*.json /tmp/plm/scierc/ && ls /tmp/plm/scierc; grep -n \"max_steps\" /tmp/plm/repo/run_acener.py | head -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v /tmp/plm:/work -w /work/repo plm:py38 bash -c \"timeout 600 python run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --num_train_epochs 50 --per_gpu_train_batch_size 8 --per_gpu_eval_batch_size 16 --gradient_accumulation_steps 1 --max_seq_length 512 --save_steps 100000 --max_pair_length 256 --max_mention_ori_length 8 --do_train --max_steps 3 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke --overwrite_output_dir\" 2>&1 | tail -30",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm --shm-size=4g -v /tmp/plm:/work -w /work/repo plm:py38 bash -c \"timeout 900 python run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --num_train_epochs 50 --per_gpu_train_batch_size 8 --per_gpu_eval_batch_size 16 --gradient_accumulation_steps 1 --max_seq_length 512 --save_steps 100000 --max_pair_length 256 --max_mention_ori_length 8 --do_train --max_steps 3 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke --overwrite_output_dir\" 2>&1 | tail -25",
+        "timeout": 1200000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "nproc; curl -s https://pypi.org/pypi/tokenizers/0.5.2/json | python3 -c \"import json,sys;d=json.load(sys.stdin);print([u['filename'] for u in d['urls']])\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm --shm-size=4g -e OMP_NUM_THREADS=16 -v /tmp/plm:/work -w /work/repo plm:py38 bash -c \"timeout 900 python run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --num_train_epochs 50 --per_gpu_train_batch_size 8 --per_gpu_eval_batch_size 16 --gradient_accumulation_steps 1 --max_seq_length 512 --save_steps 100000 --logging_steps 1 --max_pair_length 256 --max_mention_ori_length 8 --do_train --max_steps 2 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke --overwrite_output_dir\" 2>&1 | grep -vi \"INFO - transformers\" | tail -12",
+        "timeout": 1200000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm --shm-size=4g -e OMP_NUM_THREADS=16 -v /tmp/plm:/work -w /work/repo plm:py38 bash -c \"timeout 420 python -u run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --per_gpu_train_batch_size 8 --gradient_accumulation_steps 1 --max_seq_length 512 --save_steps 100000 --logging_steps 1 --max_pair_length 256 --max_mention_ori_length 8 --do_train --max_steps 2 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke --overwrite_output_dir\" > /tmp/plm/s.log 2>&1; tr '\\r' '\\n' < /tmp/plm/s.log | grep -i \"iteration\\|loss\\|error\" | tail -8",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm --shm-size=4g -e OMP_NUM_THREADS=16 -v /tmp/plm:/work -w /work/repo plm:py38 bash -c \"timeout 540 python -u run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --per_gpu_train_batch_size 2 --gradient_accumulation_steps 1 --max_seq_length 256 --save_steps 100000 --logging_steps 1 --max_pair_length 16 --max_mention_ori_length 8 --do_train --max_steps 3 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke2 --overwrite_output_dir\" > /tmp/plm/s2.log 2>&1; tr '\\r' '\\n' < /tmp/plm/s2.log | grep -iv \"INFO - transformers\" | grep -i \"iteration\\|loss\\|error\\|Traceback\" | tail -10",
+        "timeout": 700000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rmi plm:py38 >/dev/null 2>&1; docker ps -a | head -3"
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [
+    "Exit code 143\nCommand timed out after 10m 0s",
+    "Exit code 144"
+  ],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1791446400,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "Smoke test passed. Here's the diagnosis:\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/2022.acl-long.337/\",\n  \"entrypoint\": {\n    \"command\": \"python3 run_acener.py --model_type bertspanmarker --model_name_or_path bert_models/scibert_scivocab_uncased --do_lower_case --data_dir scierc --learning_rate 2e-5 --num_train_epochs 50 --per_gpu_train_batch_size 8 --max_seq_length 512 --max_pair_length 256 --max_mention_ori_length 8 --do_train --do_eval --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir sciner_models/... --output_results\",\n    \"source\": \"README 'Training Script' / scripts/run_train_ner_PLMarker.sh (SciERC block)\",\n    \"written_by_agent\": false,\n    \"agent_script\": null\n  },\n  \"env_analysis\": {\n    \"python_version_required\": \"3.6-3.8\",\n    \"framework_required\": \"bundled transformers fork 2.5.1 (pip install --editable ./transformers), pins tokenizers==0.5.2; torch unpinned (requirement.txt: torch, tqdm, tensorboardX, seqeval==1.2.2); apex needed only for --fp16\",\n    \"evidence\": \"transformers/setup.py: python_requires>=3.5.0, install_requires 'tokenizers == 0.5.2' (last wheels cp38); requirement.txt; run_acener.py:496 'from apex import amp'\"\n  },\n  \"external_apis\": [],\n  \"data\": {\n    \"datasets_needed\": [\"SciERC\", \"ACE04\", \"ACE05\", \"CoNLL03\", \"OntoNotes 5.0\", \"Few-NERD\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\"dataset\": \"SciERC\", \"state\": \"public_auto\", \"source\": \"http://nlp.cs.washington.edu/sciIE/data/sciERC_processed.tar.gz (processed_data/json/{train,dev,test}.json, 350/50/100 docs — official DyGIE split in the repo's required JSONL format)\", \"version_uncertain\": false},\n      {\"dataset\": \"ACE04/ACE05\", \"state\": \"licensed\", \"source\": \"LDC catalog, requires license + DyGIE preprocessing\", \"version_uncertain\": false},\n      {\"dataset\": \"OntoNotes 5.0\", \"state\": \"licensed\", \"source\": \"LDC2013T19\", \"version_uncertain\": false},\n      {\"dataset\": \"CoNLL03\", \"state\": \"public_manual\", \"source\": \"Google Drive / Tsinghua Cloud folder links in README (web click-through)\", \"version_uncertain\": true},\n      {\"dataset\": \"Few-NERD\", \"state\": \"public_manual\", \"source\": \"https://ningding97.github.io/fewnerd/ (web download)\", \"version_uncertain\": true},\n      {\"dataset\": \"scibert_scivocab_uncased weights\", \"state\": \"public_auto\", \"source\": \"HuggingFace allenai/scibert_scivocab_uncased (wget commands in README work)\", \"version_uncertain\": false}\n    ],\n    \"used_for_smoke\": \"real\"\n  },\n  \"docker\": {\n    \"images_tried\": [\"pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime\", \"python:3.8\"],\n    \"image_used\": \"python:3.8\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run --rm --shm-size=4g -e OMP_NUM_THREADS=16 -v /tmp/plm:/work -w /work/repo plm:py38 bash -c 'python -u run_acener.py ...'\"\n  },\n  \"install\": {\n    \"status\": \"success\",\n    \"log_tail\": \"python:3.8 + 'pip install torch==2.4.1 --extra-index-url .../cpu' + 'pip install tqdm tensorboardX seqeval==1.2.2' + 'pip install --editable ./transformers' => 'import transformers,torch' prints '2.5.1 2.4.1+cpu'. Earlier attempt on pytorch/pytorch:2.7.1-cuda12.8 (py3.11) failed: tokenizers==0.5.2 has no py3.11 wheel and source build errors 'can't find Rust compiler' -> had to drop to py3.8, which caps torch below Blackwell (sm_120) support, so GPU could not be used. apex not installed; --fp16 omitted (CLI flag only).\"\n  },\n  \"run\": {\n    \"command\": \"python -u run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --per_gpu_train_batch_size 2 --max_seq_length 256 --max_pair_length 16 --max_mention_ori_length 8 --do_train --max_steps 3 --logging_steps 1 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke2 --overwrite_output_dir\",\n    \"status\": \"success\",\n    \"output_tail\": \"***** Running training *****  Num examples = 2103 ... maxL: 334 maxR: 780\\nIteration: 1/10190 [00:02<6:53:42, 2.44s/it]\\nIteration: 2/10190 [00:04<5:44:47, 2.03s/it]\\nIteration: 3/10190 [00:05<4:50:46, 1.71s/it]\\nINFO - __main__ - global_step = 4, average loss = 2.0642431676387787\",\n    \"speed\": \"CPU only (no usable GPU). Reduced smoke config (seq256/pair16/bs2): ~1.7-2.4 s/step, 10190 steps per epoch. Paper SciERC config (seq512/pair256/bs8): 263 steps/epoch but a single step did not finish within 420-900 s of wall time (no iteration tick), i.e. >5 min/step on CPU; paper runs 50 epochs x 5 seeds.\"\n  },\n  \"smoke_verdict\": \"smoke_passed\",\n  \"all_blockers\": [],\n  \"blocker_attribution\": null,\n  \"verdict_reason\": \"Repo installs cleanly on python:3.8 and trains end-to-end on the real, freely downloadable SciERC data (loss 2.064 at global_step 4); only the full-scale run is infeasible here because the pinned tokenizers==0.5.2 caps Python at 3.8, forcing a torch too old for this Blackwell GPU, so training falls back to CPU.\",\n  \"repro\": {\n    \"status\": \"skipped\",\n    \"skip_reason\": \"CPU-only execution: paper SciERC NER config is 263 steps/epoch x 50 epochs, and one step did not even complete in 420 s of CPU time (>5 min/step) => >1000 hours; even the reduced config would need ~5 h/epoch. Far beyond the 30-minute budget. (Evaluating the released checkpoints would also require a Google-Drive/Tsinghua-Cloud manual download plus CPU inference over 2103 marker instances at seq 512.)\",\n    \"estimated_minutes\": null,\n    \"command\": null,\n    \"metric\": null,\n    \"our_value\": null,\n    \"paper_value\": null,\n    \"paper_source\": null,\n    \"match\": null,\n    \"note\": \"Notable environment findings, not blockers: (1) tokenizers==0.5.2 pinned in transformers/setup.py has wheels only up to cp38 and its source build needs Rust, so no modern-GPU-capable Python is usable without replacing that dep; (2) apex is required for the README's --fp16 flag and is not installable/needed for CPU; (3) docker needs --shm-size>=4g, otherwise DataLoader workers die with 'Bus error ... out of shared memory'; (4) ACE04/ACE05/OntoNotes require LDC licenses, so only SciERC (and manually-downloadable CoNLL03/Few-NERD) are reachable.\"\n  }\n}\n```",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/2022.acl-long.337/",
+    "entrypoint": {
+      "command": "python3 run_acener.py --model_type bertspanmarker --model_name_or_path bert_models/scibert_scivocab_uncased --do_lower_case --data_dir scierc --learning_rate 2e-5 --num_train_epochs 50 --per_gpu_train_batch_size 8 --max_seq_length 512 --max_pair_length 256 --max_mention_ori_length 8 --do_train --do_eval --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir sciner_models/... --output_results",
+      "source": "README 'Training Script' / scripts/run_train_ner_PLMarker.sh (SciERC block)",
+      "written_by_agent": false,
+      "agent_script": null
+    },
+    "env_analysis": {
+      "python_version_required": "3.6-3.8",
+      "framework_required": "bundled transformers fork 2.5.1 (pip install --editable ./transformers), pins tokenizers==0.5.2; torch unpinned (requirement.txt: torch, tqdm, tensorboardX, seqeval==1.2.2); apex needed only for --fp16",
+      "evidence": "transformers/setup.py: python_requires>=3.5.0, install_requires 'tokenizers == 0.5.2' (last wheels cp38); requirement.txt; run_acener.py:496 'from apex import amp'"
+    },
+    "external_apis": [],
+    "data": {
+      "datasets_needed": [
+        "SciERC",
+        "ACE04",
+        "ACE05",
+        "CoNLL03",
+        "OntoNotes 5.0",
+        "Few-NERD"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "SciERC",
+          "state": "public_auto",
+          "source": "http://nlp.cs.washington.edu/sciIE/data/sciERC_processed.tar.gz (processed_data/json/{train,dev,test}.json, 350/50/100 docs — official DyGIE split in the repo's required JSONL format)",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "ACE04/ACE05",
+          "state": "licensed",
+          "source": "LDC catalog, requires license + DyGIE preprocessing",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "OntoNotes 5.0",
+          "state": "licensed",
+          "source": "LDC2013T19",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "CoNLL03",
+          "state": "public_manual",
+          "source": "Google Drive / Tsinghua Cloud folder links in README (web click-through)",
+          "version_uncertain": true
+        },
+        {
+          "dataset": "Few-NERD",
+          "state": "public_manual",
+          "source": "https://ningding97.github.io/fewnerd/ (web download)",
+          "version_uncertain": true
+        },
+        {
+          "dataset": "scibert_scivocab_uncased weights",
+          "state": "public_auto",
+          "source": "HuggingFace allenai/scibert_scivocab_uncased (wget commands in README work)",
+          "version_uncertain": false
+        }
+      ],
+      "used_for_smoke": "real"
+    },
+    "docker": {
+      "images_tried": [
+        "pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime",
+        "python:3.8"
+      ],
+      "image_used": "python:3.8",
+      "pull_success": true,
+      "run_command": "docker run --rm --shm-size=4g -e OMP_NUM_THREADS=16 -v /tmp/plm:/work -w /work/repo plm:py38 bash -c 'python -u run_acener.py ...'"
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "python:3.8 + 'pip install torch==2.4.1 --extra-index-url .../cpu' + 'pip install tqdm tensorboardX seqeval==1.2.2' + 'pip install --editable ./transformers' => 'import transformers,torch' prints '2.5.1 2.4.1+cpu'. Earlier attempt on pytorch/pytorch:2.7.1-cuda12.8 (py3.11) failed: tokenizers==0.5.2 has no py3.11 wheel and source build errors 'can't find Rust compiler' -> had to drop to py3.8, which caps torch below Blackwell (sm_120) support, so GPU could not be used. apex not installed; --fp16 omitted (CLI flag only)."
+    },
+    "run": {
+      "command": "python -u run_acener.py --model_type bertspanmarker --model_name_or_path /work/bert_models/scibert_scivocab_uncased --do_lower_case --data_dir /work/scierc --learning_rate 2e-5 --per_gpu_train_batch_size 2 --max_seq_length 256 --max_pair_length 16 --max_mention_ori_length 8 --do_train --max_steps 3 --logging_steps 1 --seed 42 --onedropout --lminit --train_file train.json --dev_file dev.json --test_file test.json --output_dir /work/out_smoke2 --overwrite_output_dir",
+      "status": "success",
+      "output_tail": "***** Running training *****  Num examples = 2103 ... maxL: 334 maxR: 780\nIteration: 1/10190 [00:02<6:53:42, 2.44s/it]\nIteration: 2/10190 [00:04<5:44:47, 2.03s/it]\nIteration: 3/10190 [00:05<4:50:46, 1.71s/it]\nINFO - __main__ - global_step = 4, average loss = 2.0642431676387787",
+      "speed": "CPU only (no usable GPU). Reduced smoke config (seq256/pair16/bs2): ~1.7-2.4 s/step, 10190 steps per epoch. Paper SciERC config (seq512/pair256/bs8): 263 steps/epoch but a single step did not finish within 420-900 s of wall time (no iteration tick), i.e. >5 min/step on CPU; paper runs 50 epochs x 5 seeds."
+    },
+    "smoke_verdict": "smoke_passed",
+    "all_blockers": [],
+    "blocker_attribution": null,
+    "verdict_reason": "Repo installs cleanly on python:3.8 and trains end-to-end on the real, freely downloadable SciERC data (loss 2.064 at global_step 4); only the full-scale run is infeasible here because the pinned tokenizers==0.5.2 caps Python at 3.8, forcing a torch too old for this Blackwell GPU, so training falls back to CPU.",
+    "repro": {
+      "status": "skipped",
+      "skip_reason": "CPU-only execution: paper SciERC NER config is 263 steps/epoch x 50 epochs, and one step did not even complete in 420 s of CPU time (>5 min/step) => >1000 hours; even the reduced config would need ~5 h/epoch. Far beyond the 30-minute budget. (Evaluating the released checkpoints would also require a Google-Drive/Tsinghua-Cloud manual download plus CPU inference over 2103 marker instances at seq 512.)",
+      "estimated_minutes": null,
+      "command": null,
+      "metric": null,
+      "our_value": null,
+      "paper_value": null,
+      "paper_source": null,
+      "match": null,
+      "note": "Notable environment findings, not blockers: (1) tokenizers==0.5.2 pinned in transformers/setup.py has wheels only up to cp38 and its source build needs Rust, so no modern-GPU-capable Python is usable without replacing that dep; (2) apex is required for the README's --fp16 flag and is not installable/needed for CPU; (3) docker needs --shm-size>=4g, otherwise DataLoader workers die with 'Bus error ... out of shared memory'; (4) ACE04/ACE05/OntoNotes require LDC licenses, so only SciERC (and manually-downloadable CoNLL03/Few-NERD) are reachable."
+    }
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v13_smoke_repro__default__thunlp-PL-Marker-dd19a85__9b2ed38f.jsonl"
+}

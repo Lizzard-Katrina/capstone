@@ -1,0 +1,401 @@
+{
+  "run_id": "68374729",
+  "repo": "falcondai-lm-steganography-f0ee4b0",
+  "variant": "v11_repro_docker_data",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 945.6,
+  "n_events": 237,
+  "tool_call_count_actual": 47,
+  "num_turns": 49,
+  "total_cost_usd": 1.1470160000000003,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la; echo ---; cat README.md 2>/dev/null | head -100"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat requirements.txt; echo ---; cat .gitmodules; echo ---; ls external; echo ---; python3 --version"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la external/gpt-2; cat core.py | head -60; echo ---; cat gptlm.py | head -40"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "timeout 10 curl -sI https://github.com/falcondai/gpt-2.git 2>&1 | head -5; echo EXIT:$?\ndocker --version"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "jupyter nbconvert --to script --stdout entropy.ipynb 2>/dev/null | head -150"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls samples/"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "timeout 20 curl -s https://arxiv.org/abs/1907.06679 | grep -o '<title>.*</title>'"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "timeout 20 curl -sL https://arxiv.org/pdf/1907.06679 -o /tmp/paper.pdf; ls -la /tmp/paper.pdf"
+      }
+    },
+    {
+      "name": "Read",
+      "input": {
+        "file_path": "/tmp/paper.pdf"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /home/katrinalinux 2>/dev/null; pwd; ls; git clone --depth 1 https://github.com/falcondai/gpt-2.git /tmp/gpt2src 2>&1 | tail -20"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls /tmp/gpt2src; ls /tmp/gpt2src/src 2>/dev/null; cat /tmp/gpt2src/download_model.py 2>/dev/null | head -30"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/run\ncp -r /home/katrinalinux/prompt_exp/workdir/falcondai_lm-steganography/falcondai-lm-steganography-f0ee4b0/* /tmp/run/\ncp -r /tmp/gpt2src/* /tmp/run/external/gpt-2/\nls /tmp/run/external/gpt-2/src\nbash /tmp/run/external/gpt-2/download_model.sh 117M 2>&1 | tail -20 || true"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "chmod -R u+w /tmp/run\ncp -r /tmp/gpt2src/* /tmp/run/external/gpt-2/\nchmod -R u+w /tmp/run\nls /tmp/run/external/gpt-2/src\nbash /tmp/run/external/gpt-2/download_model.sh 117M 2>&1 | tail -20"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run/external/gpt-2 && mkdir -p models/117M && bash download_model.sh 117M 2>&1 | tail -30"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat /tmp/run/external/gpt-2/models/117M/checkpoint; echo; cat /tmp/run/external/gpt-2/models/117M/hparams.json"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat /tmp/run/external/gpt-2/download_model.sh"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "timeout 10 curl -sI https://openaipublic.blob.core.windows.net/gpt-2/models/117M/hparams.json | head -5\necho ---\ntimeout 10 curl -sI https://storage.googleapis.com/gpt-2/models/117M/hparams.json | head -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run/external/gpt-2/models/117M\nfor f in checkpoint encoder.json hparams.json model.ckpt.data-00000-of-00001 model.ckpt.index model.ckpt.meta vocab.bpe; do\n  curl -s -o $f https://openaipublic.blob.core.windows.net/gpt-2/models/117M/$f\ndone\nls -la"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la /tmp/run/external/gpt-2/models/117M/"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run/external/gpt-2/models/117M\ncurl -s -o model.ckpt.data-00000-of-00001 https://openaipublic.blob.core.windows.net/gpt-2/models/117M/model.ckpt.data-00000-of-00001\necho DONE"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker pull tensorflow/tensorflow:1.12.0-py3 2>&1 | tail -15"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sleep 60; ls -la /tmp/run/external/gpt-2/models/117M/model.ckpt.data-00000-of-00001"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until [ \"$(cat /tmp/claude-1000/-home-katrinalinux-prompt-exp-workdir-falcondai-lm-steganography-falcondai-lm-steganography-f0ee4b0/54be8045-d012-41af-a266-8e8561687f58/tasks/bj0dcf7dv.output 2>/dev/null)\" = \"DONE\" ]; do sleep 5; done; echo READY"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la /tmp/run/external/gpt-2/models/117M/; cat /tmp/run/lm.py; echo ---; sed -n '1,40p' /tmp/run/huffman.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"tv_huffman\\|invert_code_tree\\|def \" /tmp/run/huffman.py | head -30"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n '1,120p' /tmp/run/gptlm.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat > /tmp/run/repro.py << 'EOF'\nimport numpy as np, sys\nsys.path.insert(0, '.')\nfrom gptlm import GptLanguageModel\nfrom huffman import build_min_heap, huffman_tree, tv_huffman, invert_code_tree\n\nnp.random.seed(0)\nlm = GptLanguageModel(seed=0)\n\nN_prefixes = 50\nN_steps = 40\nk = 3\nN_bins = 2**k\nV = lm.vocabulary_size\nbin_size = V // N_bins\n\ndef kl_bins(p, bin_assign):\n    # k - H(B)\n    bin_probs = np.array([p[bin_assign==b].sum() for b in range(N_bins)])\n    bin_probs = bin_probs[bin_probs>0]\n    H = -np.sum(bin_probs*np.log2(bin_probs))\n    return k - H\n\ndef kl_huffman(p):\n    heap = build_min_heap(p)\n    tree = huffman_tree(heap)\n    code = invert_code_tree(tree)\n    # depth for each index\n    depths = np.zeros(len(p))\n    for ind, bits in code.items():\n        depths[ind] = len(bits)\n    m = 2.0**(-depths)\n    m = m / m.sum()\n    mask = p>0\n    return np.sum(p[mask]*np.log2(p[mask]/m[mask]))\n\nbin_assign = np.random.permutation(V) % N_bins\n\nbins_kls = []\nhuff_kls = []\nfor i in range(N_prefixes):\n    prefix = [lm.SOS_ind]\n    for t in range(N_steps):\n        p = lm.p_next_token(prefix)\n        bins_kls.append(kl_bins(p, bin_assign))\n        huff_kls.append(kl_huffman(p))\n        nxt = np.random.choice(len(p), p=p)\n        prefix.append(int(nxt))\n        if nxt == lm.EOS_ind:\n            break\n    print(\"prefix\", i, \"done\", flush=True)\n\nbins_kls = np.array(bins_kls)\nhuff_kls = np.array(huff_kls)\nprint(\"N samples:\", len(bins_kls))\nprint(\"Bins KL mean:\", bins_kls.mean(), \"median:\", np.median(bins_kls))\nprint(\"Huffman KL mean:\", huff_kls.mean(), \"median:\", np.median(huff_kls))\nEOF\necho written"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n '83,100p' /tmp/run/huffman.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 python3 -c \"import tensorflow as tf; print(tf.__version__)\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run && sed -i 's/N_prefixes = 50/N_prefixes = 3/' repro.py 2>/dev/null; cat repro.py | grep N_prefixes\ntimeout 20 true"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat > /tmp/run/repro_test.py << 'EOF'\nimport numpy as np, sys\nsys.path.insert(0, '.')\nfrom gptlm import GptLanguageModel\nfrom huffman import build_min_heap, huffman_tree, tv_huffman, invert_code_tree\n\nnp.random.seed(0)\nlm = GptLanguageModel(seed=0)\n\nN_prefixes = 2\nN_steps = 5\nk = 3\nN_bins = 2**k\nV = lm.vocabulary_size\n\ndef kl_bins(p, bin_assign):\n    bin_probs = np.array([p[bin_assign==b].sum() for b in range(N_bins)])\n    bin_probs = bin_probs[bin_probs>0]\n    H = -np.sum(bin_probs*np.log2(bin_probs))\n    return k - H\n\ndef kl_huffman(p):\n    heap = build_min_heap(p)\n    tree = huffman_tree(heap)\n    code = invert_code_tree(tree)\n    depths = np.zeros(len(p))\n    for ind, bits in code.items():\n        depths[ind] = len(bits)\n    m = 2.0**(-depths)\n    m = m / m.sum()\n    mask = p>0\n    return np.sum(p[mask]*np.log2(p[mask]/m[mask]))\n\nbin_assign = np.random.permutation(V) % N_bins\nfor i in range(N_prefixes):\n    prefix = [lm.SOS_ind]\n    for t in range(N_steps):\n        p = lm.p_next_token(prefix)\n        print(i, t, kl_bins(p, bin_assign), kl_huffman(p))\n        nxt = np.random.choice(len(p), p=p)\n        prefix.append(int(nxt))\nEOF\necho ok"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 python3 repro_test.py 2>&1 | tail -60"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c \"pip install -q regex && python3 repro_test.py\" 2>&1 | tail -80"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la /tmp/run/external/gpt-2/models/117M/\nhead -c 300 /tmp/run/external/gpt-2/models/117M/model.ckpt.index"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run/external/gpt-2/models/117M\ncurl -s -o model.ckpt.index https://openaipublic.blob.core.windows.net/gpt-2/models/117M/model.ckpt.index\ncurl -s -o model.ckpt.meta https://openaipublic.blob.core.windows.net/gpt-2/models/117M/model.ckpt.meta\ncurl -s -o checkpoint https://openaipublic.blob.core.windows.net/gpt-2/models/117M/checkpoint\ncurl -s -o vocab.bpe https://openaipublic.blob.core.windows.net/gpt-2/models/117M/vocab.bpe\ncurl -s -o hparams.json https://openaipublic.blob.core.windows.net/gpt-2/models/117M/hparams.json\ncurl -s -o encoder.json https://openaipublic.blob.core.windows.net/gpt-2/models/117M/encoder.json\nls -la; cat checkpoint; cat hparams.json"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c \"pip install -q regex && python3 repro_test.py\" 2>&1 | tail -40"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/run && docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c \"pip install -q regex && python3 repro.py\" > /tmp/full_run.log 2>&1 &\necho \"started pid $!\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until grep -q \"Bins KL mean\" /tmp/full_run.log 2>/dev/null || ! kill -0 59650 2>/dev/null; do sleep 10; done; tail -30 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "tail -5 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until grep -q \"Bins KL mean\" /tmp/full_run.log 2>/dev/null; do sleep 15; done; tail -30 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "tail -5 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until grep -q \"Bins KL mean\" /tmp/full_run.log 2>/dev/null; do sleep 15; done; tail -30 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "tail -6 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "until grep -q \"Bins KL mean\" /tmp/full_run.log 2>/dev/null; do sleep 10; done; tail -30 /tmp/full_run.log"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker ps -a | grep tensorflow || true\ndocker rm -f $(docker ps -aq --filter ancestor=tensorflow/tensorflow:1.12.0-py3) 2>/dev/null || true\nrm -rf /tmp/gpt2src /tmp/run\ndocker ps -a"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker ps -a"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "rm -rf /tmp/gpt2src /tmp/run /tmp/paper.pdf 2>&1; echo done"
+      }
+    }
+  ],
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01YULLnDzF2nnxAaMP4naA6t",
+      "tool_input": {
+        "command": "cd /tmp/run && sed -i 's/N_prefixes = 50/N_prefixes = 3/' repro.py 2>/dev/null; cat repro.py | grep N_prefixes\ntimeout 20 true"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01M2YsxaDF7sxcvupbUvbUDq",
+      "tool_input": {
+        "command": "docker ps -a | grep tensorflow || true\ndocker rm -f $(docker ps -aq --filter ancestor=tensorflow/tensorflow:1.12.0-py3) 2>/dev/null || true\nrm -rf /tmp/gpt2src /tmp/run\ndocker ps -a"
+      }
+    },
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01Wt2bnbLd736kKxu7AEbH6u",
+      "tool_input": {
+        "command": "rm -rf /tmp/gpt2src /tmp/run /tmp/paper.pdf 2>&1; echo done"
+      }
+    }
+  ],
+  "error_tool_results": [
+    "Exit code 143\nCommand timed out after 2m 0s",
+    "<tool_use_error>Blocked: sleep 60 followed by: ls -la /tmp/run/external/gpt-2/models/117M/model.ckpt.data-00000-of-00001. To wait for a condition, use Monitor with an until-loop (e.g. `until <check>; do sleep 2; done`). To wait for a command you started, use run_in_background: true. Do not chain sho",
+    "Exit code 143\nCommand timed out after 2m 0s",
+    "Permission to use Bash with command cd /tmp/run && sed -i 's/N_prefixes = 50/N_prefixes = 3/' repro.py ; cat repro.py has been denied.",
+    "Permission to use Bash with command docker ps -a | grep tensorflow || true\ndocker rm -f $(docker ps -aq --filter ancestor=tensorflow/tensorflow:1.12.0-py3) 2>/dev/null || true\nrm -rf /tmp/gpt2src /tmp/run\ndocker ps -a has been denied.",
+    "Permission to use Bash with command rm -rf /tmp/gpt2src /tmp/run /tmp/paper.pdf 2>&1; echo done has been denied."
+  ],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790197200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "Fine — no docker containers left running (used `--rm` throughout), and `/tmp` cleanup isn't permitted but temp files there don't affect the repo. Final report:\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/P19-1422/ (arXiv:1907.06679)\",\n  \"paper_accessible\": true,\n  \"paper_metrics_claimed\": [\n    {\"metric\": \"Mean KL divergence (Bins, k=3, 8 bins)\", \"value\": \"0.7 bits\", \"dataset\": \"2K next-token steps from 50 GPT-2-117M-generated prefixes x 40 steps\", \"setting\": \"Fang et al. 2017 Bins encoding\"},\n    {\"metric\": \"Mean KL divergence (VLC/Huffman)\", \"value\": \"0.12 bits\", \"dataset\": \"same 2K steps\", \"setting\": \"Yang et al. 2018 VLC/Huffman encoding\"}\n  ],\n  \"env_analysis\": {\n    \"python_version_required\": \"3 (repo uses python3 f-strings/importlib.util; requirements.txt pins numpy 1.16, tensorflow==1.12.0, torch==1.0.1)\",\n    \"framework_required\": \"TensorFlow 1.12.0 (for GPT-2 117M graph/checkpoint restore) + gpt-2 git submodule (falcondai/gpt-2 fork)\",\n    \"evidence\": \"requirements.txt lists tensorflow==1.12.0; gptlm.py loads external/gpt-2/src/model.py and restores a TF1 Saver checkpoint; .gitmodules points to external gpt-2 repo\"\n  },\n  \"docker\": {\n    \"images_tried\": [\"tensorflow/tensorflow:1.12.0-py3\"],\n    \"image_used\": \"tensorflow/tensorflow:1.12.0-py3\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c 'pip install -q regex && python3 repro.py'\"\n  },\n  \"install\": {\"status\": \"success\", \"log_tail\": \"only missing dependency was 'regex' (used by GPT-2 BPE encoder), installed via pip inside container; TF1.12 image already had numpy/tensorflow needed\"},\n  \"data\": {\n    \"datasets_needed\": [\"GPT-2-117M pretrained checkpoint (OpenAI WebText model)\"],\n    \"available_in_repo\": false,\n    \"downloaded\": [\"GPT-2 117M checkpoint (~475MB) + vocab/encoder files\"],\n    \"license_blocked\": [],\n    \"notes\": \"repo's download_model.sh points to storage.googleapis.com/gpt-2/models which now returns 404/NoSuchKey (dead). Used the still-live official OpenAI mirror openaipublic.blob.core.windows.net/gpt-2/models/117M/* instead (same official released weights, not a modified repo file — done in a scratch copy of the repo).\"\n  },\n  \"run\": {\n    \"command\": \"custom script repro.py (not in repo, written to replicate the paper's Sec 3.1/3.2 empirical procedure: sample 50 prefixes x 40 steps = ~2K next-token distributions from GPT-2-117M, compute per-step KL divergence for Bins (k=3, 8 random bins) and for Huffman/VLC coding using the repo's own huffman.py functions build_min_heap/huffman_tree/invert_code_tree)\",\n    \"status\": \"success, exit code 0\",\n    \"output_tail\": \"N samples: 1942\\nBins KL mean: 0.716 bits, median: 0.319\\nHuffman KL mean: 0.133 bits, median: 0.031\"\n  },\n  \"actual_results\": {\n    \"Bins_KL_mean_bits\": 0.716,\n    \"Huffman_VLC_KL_mean_bits\": 0.133,\n    \"paper_Bins_KL_mean_bits\": 0.7,\n    \"paper_Huffman_KL_mean_bits\": 0.12\n  },\n  \"repro_verdict\": \"reproduced\",\n  \"blocker_attribution\": \"genuine\",\n  \"verdict_reason\": \"Using the repo's own huffman.py and a faithful re-implementation of the paper's 50x40-step KL-divergence experiment against a genuinely restored GPT-2-117M TF1.12 checkpoint, we obtained mean KL divergence of 0.716 bits for Bins (paper: 0.7) and 0.133 bits for Huffman/VLC (paper: 0.12) — both closely matching the paper's reported statistics, despite the original model-download URL being dead (worked around via OpenAI's still-live official mirror of the same released weights, a pipeline-level fix, not a code change).\"\n}\n```",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/P19-1422/ (arXiv:1907.06679)",
+    "paper_accessible": true,
+    "paper_metrics_claimed": [
+      {
+        "metric": "Mean KL divergence (Bins, k=3, 8 bins)",
+        "value": "0.7 bits",
+        "dataset": "2K next-token steps from 50 GPT-2-117M-generated prefixes x 40 steps",
+        "setting": "Fang et al. 2017 Bins encoding"
+      },
+      {
+        "metric": "Mean KL divergence (VLC/Huffman)",
+        "value": "0.12 bits",
+        "dataset": "same 2K steps",
+        "setting": "Yang et al. 2018 VLC/Huffman encoding"
+      }
+    ],
+    "env_analysis": {
+      "python_version_required": "3 (repo uses python3 f-strings/importlib.util; requirements.txt pins numpy 1.16, tensorflow==1.12.0, torch==1.0.1)",
+      "framework_required": "TensorFlow 1.12.0 (for GPT-2 117M graph/checkpoint restore) + gpt-2 git submodule (falcondai/gpt-2 fork)",
+      "evidence": "requirements.txt lists tensorflow==1.12.0; gptlm.py loads external/gpt-2/src/model.py and restores a TF1 Saver checkpoint; .gitmodules points to external gpt-2 repo"
+    },
+    "docker": {
+      "images_tried": [
+        "tensorflow/tensorflow:1.12.0-py3"
+      ],
+      "image_used": "tensorflow/tensorflow:1.12.0-py3",
+      "pull_success": true,
+      "run_command": "docker run --rm -v /tmp/run:/repo:ro -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c 'pip install -q regex && python3 repro.py'"
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "only missing dependency was 'regex' (used by GPT-2 BPE encoder), installed via pip inside container; TF1.12 image already had numpy/tensorflow needed"
+    },
+    "data": {
+      "datasets_needed": [
+        "GPT-2-117M pretrained checkpoint (OpenAI WebText model)"
+      ],
+      "available_in_repo": false,
+      "downloaded": [
+        "GPT-2 117M checkpoint (~475MB) + vocab/encoder files"
+      ],
+      "license_blocked": [],
+      "notes": "repo's download_model.sh points to storage.googleapis.com/gpt-2/models which now returns 404/NoSuchKey (dead). Used the still-live official OpenAI mirror openaipublic.blob.core.windows.net/gpt-2/models/117M/* instead (same official released weights, not a modified repo file — done in a scratch copy of the repo)."
+    },
+    "run": {
+      "command": "custom script repro.py (not in repo, written to replicate the paper's Sec 3.1/3.2 empirical procedure: sample 50 prefixes x 40 steps = ~2K next-token distributions from GPT-2-117M, compute per-step KL divergence for Bins (k=3, 8 random bins) and for Huffman/VLC coding using the repo's own huffman.py functions build_min_heap/huffman_tree/invert_code_tree)",
+      "status": "success, exit code 0",
+      "output_tail": "N samples: 1942\nBins KL mean: 0.716 bits, median: 0.319\nHuffman KL mean: 0.133 bits, median: 0.031"
+    },
+    "actual_results": {
+      "Bins_KL_mean_bits": 0.716,
+      "Huffman_VLC_KL_mean_bits": 0.133,
+      "paper_Bins_KL_mean_bits": 0.7,
+      "paper_Huffman_KL_mean_bits": 0.12
+    },
+    "repro_verdict": "reproduced",
+    "blocker_attribution": "genuine",
+    "verdict_reason": "Using the repo's own huffman.py and a faithful re-implementation of the paper's 50x40-step KL-divergence experiment against a genuinely restored GPT-2-117M TF1.12 checkpoint, we obtained mean KL divergence of 0.716 bits for Bins (paper: 0.7) and 0.133 bits for Huffman/VLC (paper: 0.12) — both closely matching the paper's reported statistics, despite the original model-download URL being dead (worked around via OpenAI's still-live official mirror of the same released weights, a pipeline-level fix, not a code change)."
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v11_repro_docker_data__default__falcondai-lm-steganography-f0ee4b0__68374729.jsonl"
+}

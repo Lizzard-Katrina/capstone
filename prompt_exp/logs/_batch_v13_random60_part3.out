@@ -1,0 +1,32 @@
+计划运行 60 次 (60 仓库 x 1 变体 x 1 模型 x 1 次重复)
+
+[已有结果,跳过] ayyoobimani/glp-pos
+[已有结果,跳过] passing2961/empgpt-3
+[已有结果,跳过] cpethe/chapter-captor
+[已有结果,跳过] orishapira/interexp
+[已有结果,跳过] senticnet/conv-emotion
+[已有结果,跳过] brihijoshi/granular-similarity-coling-2020
+[已有结果,跳过] armankazmi/linguistic-features-of-text
+[已有结果,跳过] qianchu/adjust_cwe
+[已有结果,跳过] caisa-lab/hypmix-emnlp
+[已有结果,跳过] yixinl7/simcls
+[已有结果,跳过] rycolab/artificial-languages
+[已有结果,跳过] lyuchenyang/document-level-sentiment-analysis-with-user-and-product-context
+[已有结果,跳过] thu-bpm/gradlre
+[已有结果,跳过] thunlp/pl-marker
+[已有结果,跳过] joestacey/snli_logic
+[已有结果,跳过] xnliang98/c2f-far
+[已有结果,跳过] yanzhangnlp/is-bert
+[已有结果,跳过] truthless11/cr-walker
+[1/60] pointer-generator | v13_smoke_repro | default | run 1
+    calls=13 denials=0 1142.1s verdict=smoke_passed
+[2/60] vws-pr | v13_smoke_repro | default | run 1
+    calls=23 denials=0 1747.5s verdict=smoke_passed
+[3/60] bran | v13_smoke_repro | default | run 1
+    calls=18 denials=0 761.6s verdict=smoke_passed
+[4/60] covidfact | v13_smoke_repro | default | run 1
+    calls=18 denials=0 7051.2s verdict=None
+
+已到 1.5 小时,不再开始新仓库。
+
+完成。接下来跑 src.verify 和 src.analyze。

@@ -1,0 +1,61 @@
+[
+  {
+    "run_id": "4a8b951a",
+    "repo": "UKPLab-emnlp2018-april-086bf95",
+    "variant": "v5_refined",
+    "model": "default",
+    "n_commands": 7,
+    "n_issues": 2,
+    "issues": [
+      {
+        "type": "readme_cmd_verdict_without_execution",
+        "detail": "声称跑过 `pip3 install -r requirements.txt` 得到 failed,但没跑过"
+      },
+      {
+        "type": "readme_cmd_verdict_without_execution",
+        "detail": "声称跑过 `python stage0_sample_summaries.py / stage1_active_pref_learn` 得到 failed,但没跑过"
+      }
+    ],
+    "trustworthy": false
+  },
+  {
+    "run_id": "8ec34db8",
+    "repo": "jamesHargreaves12-incremental_beam_manipulation-2ffbcef",
+    "variant": "v5_refined",
+    "model": "default",
+    "n_commands": 9,
+    "n_issues": 0,
+    "issues": [],
+    "trustworthy": true
+  },
+  {
+    "run_id": "a214dad3",
+    "repo": "jiyfeng-disco4textcat-db7a2dc",
+    "variant": "v5_refined",
+    "model": "default",
+    "n_commands": 5,
+    "n_issues": 0,
+    "issues": [],
+    "trustworthy": true
+  },
+  {
+    "run_id": "b3c9cd15",
+    "repo": "vanzytay-QuaternionTransformers-b721db4",
+    "variant": "v5_refined",
+    "model": "default",
+    "n_commands": 4,
+    "n_issues": 0,
+    "issues": [],
+    "trustworthy": true
+  },
+  {
+    "run_id": "89489a3d",
+    "repo": "yukiyakiZ-Automatic_Glossing-3f97e80",
+    "variant": "v5_refined",
+    "model": "default",
+    "n_commands": 8,
+    "n_issues": 0,
+    "issues": [],
+    "trustworthy": true
+  }
+]

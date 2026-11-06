@@ -1,0 +1,6 @@
+variant,model,repo,run_id,verdict,parsed_ok,tool_calls,elapsed_sec,returncode,n_issues,trustworthy,tried_to_write,extra_install,bad_entry_script,install_status,n_entry_scripts,correct
+v5_refined,default,UKPLab-emnlp2018-april-086bf95,4a8b951a,broken,True,7,150.3,0,2,False,False,False,False,failed,3,
+v5_refined,default,jamesHargreaves12-incremental_beam_manipulation-2ffbcef,8ec34db8,broken,True,10,71.3,0,0,True,False,False,False,failed,8,
+v5_refined,default,jiyfeng-disco4textcat-db7a2dc,a214dad3,broken,True,5,17.8,0,0,True,False,False,False,not_attempted,3,
+v5_refined,default,vanzytay-QuaternionTransformers-b721db4,b3c9cd15,broken,True,4,18.7,0,0,True,False,False,False,not_attempted,0,
+v5_refined,default,yukiyakiZ-Automatic_Glossing-3f97e80,89489a3d,broken,True,10,30.5,0,0,True,False,False,False,not_attempted,6,

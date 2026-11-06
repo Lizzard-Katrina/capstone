@@ -1,0 +1,243 @@
+{
+  "run_id": "5dee7528",
+  "repo": "jiyfeng-disco4textcat-db7a2dc",
+  "variant": "v12_repro_docker_api",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 2163.0,
+  "n_events": 148,
+  "tool_call_count_actual": 17,
+  "num_turns": 18,
+  "total_cost_usd": 0.8623705,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -R | head -50; cat README* 2>/dev/null | head -80"
+      }
+    },
+    {
+      "name": "WebFetch",
+      "input": {
+        "url": "https://aclanthology.org/P17-1092/",
+        "prompt": "title, main results table numbers, datasets"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "wc -l */*; head -30 cxxcode/README.md; head -20 cxxcode/Makefile; git log --oneline | head"
+      }
+    },
+    {
+      "name": "WebFetch",
+      "input": {
+        "url": "https://aclanthology.org/P17-1092.pdf",
+        "prompt": "List main results table accuracy numbers per dataset and model variant (DISCO, UNLABELED, etc.)"
+      }
+    },
+    {
+      "name": "Read",
+      "input": {
+        "file_path": "/home/katrinalinux/.claude/projects/-home-katrinalinux-prompt-exp-workdir-jiyfeng-disco4textcat-jiyfeng-disco4textcat-db7a2dc/5f4323da-8426-489a-87f9-77abc9173a69/tool-results/webfetch-1790558739330-0axx3m.pdf",
+        "pages": "5-7"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp && python3 -c \"\nimport urllib.request;print('x')\" ; pip list 2>/dev/null | grep -i -E \"pdf|fitz\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn -i -E \"api|token|http|download\" /home/katrinalinux/prompt-exp-workdir-jiyfeng-disco4textcat/jiyfeng-disco4textcat-db7a2dc/pythoncode | head -20; head -40 /home/katrinalinux/prompt-exp-workdir-jiyfeng-disco4textcat/jiyfeng-disco4textcat-db7a2dc/pythoncode/yelp_processing.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp && python3 -c \"\nimport pdfplumber\np=pdfplumber.open('/home/katrinalinux/.claude/projects/-home-katrinalinux-prompt-exp-workdir-jiyfeng-disco4textcat-jiyfeng-disco4textcat-db7a2dc/5f4323da-8426-489a-87f9-77abc9173a69/tool-results/webfetch-1790558739330-0axx3m.pdf')\nfor i in range(4,7): print('==',i, p.pages[i].extract_text()[:2500])\n\" 2>/dev/null | head -120"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "head -60 cxxcode/main.cc; grep -n \"include\" cxxcode/*.h cxxcode/main.cc | head -20; docker --version"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp debian:9 bash -c '\nset -x\nsed -i s/deb.debian.org/archive.debian.org/g;s#security.debian.org#archive.debian.org#g /etc/apt/sources.list 2>/dev/null\ncat /etc/apt/sources.list\napt-get -o Acquire::Check-Valid-Until=false update -qq && apt-get install -y -qq clang cmake libboost-all-dev git wget unzip >/dev/null 2>&1; echo apt=$?\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q --depth 1 -b 2.0 https://github.com/clab/dynet.git; echo dynetclone=$?\ngit clone -q --depth 1 https://github.com/muflihun/easyloggingpp.git easyloggingpp; echo elclone=$?\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen; echo eigen=$?\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/tmp/cm.log 2>&1; echo cmake=$?; tail -5 /tmp/cm.log\nmake -j4 >/tmp/mk.log 2>&1; echo dynetmake=$?; tail -20 /tmp/mk.log\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; tail -30 /tmp/mk2.log\n' 2>&1 | tail -60",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget mercurial >/dev/null 2>&1; echo apt=$?\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q --depth 1 -b 2.0 https://github.com/clab/dynet.git; echo dynetclone=$?\ngit clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp; echo elclone=$?\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen; echo eigen=$?\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ -DENABLE_BOOST=ON >/tmp/cm.log 2>&1; echo cmake=$?; tail -3 /tmp/cm.log\nmake -j8 >/tmp/mk.log 2>&1; echo dynetmake=$?; tail -10 /tmp/mk.log\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; tail -25 /tmp/mk2.log\nls -la /tmp/build/dtc 2>&1\n' 2>&1 | tail -50",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git && cd dynet && git checkout -q 2.0.3 2>/dev/null || git checkout -q v2.0 2>/dev/null; echo \"dynet_ver=$(git describe --tags 2>/dev/null || git rev-parse --short HEAD)\"\ncd /tmp/build; git clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ -DENABLE_BOOST=ON >/tmp/cm.log 2>&1; echo cmake=$?; tail -3 /tmp/cm.log\nmake -j8 >/tmp/mk.log 2>&1; echo dynetmake=$?; grep -E \"error\" /tmp/mk.log | head -5; ls dynet/libdynet.* 2>&1\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; grep -E \"error|Error\" /tmp/mk2.log | head -15\nls -la /tmp/build/dtc 2>&1 && ./dtc --help 2>&1 | head -10\n' 2>&1 | tail -40",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git; cd dynet; git tag | head -20; git checkout -q 1.1 && echo ok1.1\ncd /tmp/build; git clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/tmp/cm.log 2>&1; echo cmake=$?; tail -3 /tmp/cm.log\nmake -j8 >/tmp/mk.log 2>&1; echo dynetmake=$?; grep -E \"error:\" /tmp/mk.log | head -8; ls dynet/libdynet.* 2>&1\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; grep -E \"error:|Error\" /tmp/mk2.log|head -12\nls -la dtc 2>&1 && ./dtc --help 2>&1|head -5\n' 2>&1 | tail -40",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git; cd dynet; git checkout -q v1.1 && echo ok_v1.1\ncd /tmp/build; git clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/tmp/cm.log 2>&1; echo cmake=$?; tail -3 /tmp/cm.log\nmake -j8 >/tmp/mk.log 2>&1; echo dynetmake=$?; grep -E \"error:\" /tmp/mk.log|head -8; ls dynet/libdynet.* 2>&1\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; grep -E \"error:\" /tmp/mk2.log|head -12\nls -la dtc 2>&1 && LD_LIBRARY_PATH=/tmp/build/dynet/build/dynet ./dtc --help 2>&1|head -8\n' 2>&1 | tail -40",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git; (cd dynet; git checkout -q v1.1)\ngit clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen && cp -r eigen/Eigen eigen/unsupported dynet/\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/tmp/cm.log 2>&1 && make -j8 >/tmp/mk.log 2>&1; echo dynetmake=$?\ncd /tmp/build && make >/tmp/mk2.log 2>&1; echo dtcmake=$?; grep -E \"error:\" /tmp/mk2.log|head -12\nls -la dtc 2>&1 && LD_LIBRARY_PATH=/tmp/build/dynet/build/dynet ./dtc --help 2>&1|head -12\n' 2>&1 | tail -40",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git; (cd dynet; git checkout -q v1.1)\ngit clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen && cp -r eigen/Eigen eigen/unsupported dynet/\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/dev/null 2>&1 && make -j8 >/dev/null 2>&1\ncd /tmp/build && make 2>&1 | tail -20\necho \"=== manual link (objs before libs) ===\"\nclang++ main.o util.o -L./dynet/build/dynet -ldynet -lstdc++ -lm -lboost_serialization -lboost_filesystem -lboost_system -lboost_random -lboost_program_options -o dtc 2>&1 | tail -10; echo manual=$?\nls -la dtc && LD_LIBRARY_PATH=/tmp/build/dynet/build/dynet ./dtc --help 2>&1 | head -15\n' 2>&1 | tail -45",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro -w /tmp ubuntu:18.04 bash -c '\napt-get update -qq >/dev/null 2>&1; apt-get install -y -qq clang cmake libboost-all-dev git wget >/dev/null 2>&1\ncp -r /repo/cxxcode /tmp/build && cd /tmp/build\ngit clone -q https://github.com/clab/dynet.git; (cd dynet; git checkout -q v1.1)\ngit clone -q --depth 1 https://github.com/abumq/easyloggingpp.git easyloggingpp\nwget -q https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz && tar xzf eigen-3.3.7.tar.gz && mv eigen-3.3.7 eigen && cp -r eigen/Eigen eigen/unsupported dynet/\ncd dynet && mkdir -p build && cd build && cmake .. -DEIGEN3_INCLUDE_DIR=/tmp/build/eigen -DCMAKE_CXX_COMPILER=clang++ >/dev/null 2>&1 && make -j8 >/dev/null 2>&1\ncd /tmp/build && make main.o util.o >/dev/null 2>&1\nclang++ -I./dynet -I./easyloggingpp/src -std=gnu++11 -c easyloggingpp/src/easylogging++.cc -o el.o 2>&1|tail -3\nclang++ main.o util.o el.o -L./dynet/build/dynet -ldynet -lboost_serialization -lboost_filesystem -lboost_system -lboost_random -lboost_program_options -o dtc 2>&1|tail -5; echo link=$?\nLD_LIBRARY_PATH=/tmp/build/dynet/build/dynet ./dtc --help 2>&1 | head -12\nLD_LIBRARY_PATH=/tmp/build/dynet/build/dynet ./dtc --task train --trnfile /tmp/nonexistent.txt 2>&1 | head -8\n' 2>&1 | tail -30",
+        "timeout": 600000
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [
+    "pdftoppm is not installed. Install poppler-utils (e.g. `brew install poppler` or `apt-get install poppler-utils`) to enable PDF page rendering.",
+    "Exit code 1\ngrep: /home/katrinalinux/prompt-exp-workdir-jiyfeng-disco4textcat/jiyfeng-disco4textcat-db7a2dc/pythoncode: No such file or directory\nhead: cannot open '/home/katrinalinux/prompt-exp-workdir-jiyfeng-disco4textcat/jiyfeng-disco4textcat-db7a2dc/pythoncode/yelp_processing.py' for reading: N"
+  ],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790566800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "诊断完成。仓库只有 C++ 训练器 + 3 个数据预处理脚本,无数据、无运行脚本。\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/P17-1092/\",\n  \"paper_accessible\": true,\n  \"paper_metrics_claimed\": [\n    {\"metric\": \"Accuracy\", \"value\": \"71.8\", \"dataset\": \"Yelp\", \"setting\": \"FULL\"},\n    {\"metric\": \"Accuracy\", \"value\": \"71.3\", \"dataset\": \"Yelp\", \"setting\": \"UNLABELED\"},\n    {\"metric\": \"Accuracy\", \"value\": \"58.4\", \"dataset\": \"MFC\", \"setting\": \"UNLABELED (10-fold)\"},\n    {\"metric\": \"Accuracy\", \"value\": \"75.7\", \"dataset\": \"Debates\", \"setting\": \"UNLABELED\"},\n    {\"metric\": \"Accuracy\", \"value\": \"83.1\", \"dataset\": \"Movies\", \"setting\": \"UNLABELED (10-fold)\"},\n    {\"metric\": \"Accuracy\", \"value\": \"80.1\", \"dataset\": \"Bills\", \"setting\": \"ADDITIVE\"}\n  ],\n  \"env_analysis\": {\n    \"python_version_required\": \"2.7 (仅预处理脚本)\",\n    \"framework_required\": \"DyNet (2016 年版, 需 boost::serialization → v1.1/v2.0 之前), easylogging++ (旧的 header-only 版), Eigen, Boost, clang++ -std=gnu++11\",\n    \"evidence\": \"cxxcode/README.md 安装说明 + Makefile (LIBS 含 -lboost_serialization, CFLAGS -I./dynet -I./dynet/eigen -I./easyloggingpp/src);main.cc 2016-10 时间戳\"\n  },\n  \"external_apis\": [],\n  \"docker\": {\n    \"images_tried\": [\"debian:9\", \"ubuntu:18.04\"],\n    \"image_used\": \"ubuntu:18.04\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run --rm -v $PWD:/repo:ro -w /tmp ubuntu:18.04 bash -c 'apt-get install clang cmake libboost-all-dev git wget; cp -r /repo/cxxcode /tmp/build; clone dynet@v1.1 + easyloggingpp + eigen3.3.7; cmake+make dynet; make main.o util.o; 手动链接 el.o'\"\n  },\n  \"install\": {\n    \"status\": \"success\",\n    \"log_tail\": \"debian:9 apt 源已下线(archive 404,apt=100)→ 换 ubuntu:18.04 成功。DyNet 2.0.3/2.1 编译失败:'no member named serialize in dynet::Dict/Model'(新版移除 boost serialization);DyNet v1.1 编译通过,libdynet.so 生成。Makefile 的 -I./dynet/eigen 需手动把 Eigen 拷进 dynet/。最后 easylogging++ 新版非 header-only,Makefile 未编译 easylogging++.cc → 链接失败 (el::base::Writer::construct 等 undefined);以额外 el.o 手动链接后 dtc 成功构建并可运行 (--help OK,dynet 初始化 OK)。\"\n  },\n  \"data\": {\n    \"datasets_needed\": [\"Yelp (Dataset Challenge)\", \"MFC (Media Frames Corpus)\", \"Congressional floor debates (Thomas 2006 / Yessenalina 2010 split)\", \"Movies (Pang&Lee)\", \"Congressional bills (Yano 2012)\"],\n    \"available_in_repo\": false,\n    \"downloaded\": [],\n    \"license_blocked\": [\"Yelp Dataset (需签 Dataset Agreement 注册下载)\", \"Media Frames Corpus (需向作者申请/签协议)\"]\n  },\n  \"run\": {\n    \"command\": \"./dtc --task train --trnfile /tmp/nonexistent.txt\",\n    \"status\": \"binary 启动成功但无训练数据;仓库未提供任何数据、DPLP 篇章解析输出、超参脚本\",\n    \"output_tail\": \"[dynet] memory allocation done. / INFO [TextClass] training file: /tmp/nonexistent.txt / dev file: (空)\"\n  },\n  \"actual_results\": null,\n  \"repro_verdict\": \"blocked_data_licensed\",\n  \"all_blockers\": [\n    {\"verdict\": \"blocked_data_licensed\", \"confirmed_by\": \"static\", \"detail\": \"五个数据集全不在仓库,Yelp Dataset Challenge 与 Media Frames Corpus 均需签署协议/作者授权;且模型输入需 DPLP 篇章解析器的树结构输出,仓库既不含解析结果也不含调用脚本,pythoncode/ 只有 yelp/rst 读取器\"},\n    {\"verdict\": \"blocked_code\", \"confirmed_by\": \"execution\", \"detail\": \"make 失败:(a) 与 DyNet≥2.0.1 不兼容(boost serialization 已移除),必须用 v1.1;(b) Makefile 的 -I./dynet/eigen 假定 Eigen 在 dynet 目录内;(c) Makefile 未编译 easylogging++.cc,链接报大量 el:: undefined。三点均需改 Makefile/pin 旧版依赖(我们仅在容器内以外部 el.o 变通链接,未改仓库)。另外 README 的编译/运行说明是 'TODO',无复现命令与超参\"}\n  ],\n  \"blocker_attribution\": \"genuine\",\n  \"verdict_reason\": \"环境可在 ubuntu:18.04 + DyNet v1.1 下把 dtc 编出来并运行(需绕过 Makefile 的 easylogging++/Eigen 缺陷),但论文五个数据集、DPLP 篇章解析输出和复现脚本全部缺失,其中 Yelp/MFC 需授权,因此最早的实质卡点是数据。\"\n}\n```",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/P17-1092/",
+    "paper_accessible": true,
+    "paper_metrics_claimed": [
+      {
+        "metric": "Accuracy",
+        "value": "71.8",
+        "dataset": "Yelp",
+        "setting": "FULL"
+      },
+      {
+        "metric": "Accuracy",
+        "value": "71.3",
+        "dataset": "Yelp",
+        "setting": "UNLABELED"
+      },
+      {
+        "metric": "Accuracy",
+        "value": "58.4",
+        "dataset": "MFC",
+        "setting": "UNLABELED (10-fold)"
+      },
+      {
+        "metric": "Accuracy",
+        "value": "75.7",
+        "dataset": "Debates",
+        "setting": "UNLABELED"
+      },
+      {
+        "metric": "Accuracy",
+        "value": "83.1",
+        "dataset": "Movies",
+        "setting": "UNLABELED (10-fold)"
+      },
+      {
+        "metric": "Accuracy",
+        "value": "80.1",
+        "dataset": "Bills",
+        "setting": "ADDITIVE"
+      }
+    ],
+    "env_analysis": {
+      "python_version_required": "2.7 (仅预处理脚本)",
+      "framework_required": "DyNet (2016 年版, 需 boost::serialization → v1.1/v2.0 之前), easylogging++ (旧的 header-only 版), Eigen, Boost, clang++ -std=gnu++11",
+      "evidence": "cxxcode/README.md 安装说明 + Makefile (LIBS 含 -lboost_serialization, CFLAGS -I./dynet -I./dynet/eigen -I./easyloggingpp/src);main.cc 2016-10 时间戳"
+    },
+    "external_apis": [],
+    "docker": {
+      "images_tried": [
+        "debian:9",
+        "ubuntu:18.04"
+      ],
+      "image_used": "ubuntu:18.04",
+      "pull_success": true,
+      "run_command": "docker run --rm -v $PWD:/repo:ro -w /tmp ubuntu:18.04 bash -c 'apt-get install clang cmake libboost-all-dev git wget; cp -r /repo/cxxcode /tmp/build; clone dynet@v1.1 + easyloggingpp + eigen3.3.7; cmake+make dynet; make main.o util.o; 手动链接 el.o'"
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "debian:9 apt 源已下线(archive 404,apt=100)→ 换 ubuntu:18.04 成功。DyNet 2.0.3/2.1 编译失败:'no member named serialize in dynet::Dict/Model'(新版移除 boost serialization);DyNet v1.1 编译通过,libdynet.so 生成。Makefile 的 -I./dynet/eigen 需手动把 Eigen 拷进 dynet/。最后 easylogging++ 新版非 header-only,Makefile 未编译 easylogging++.cc → 链接失败 (el::base::Writer::construct 等 undefined);以额外 el.o 手动链接后 dtc 成功构建并可运行 (--help OK,dynet 初始化 OK)。"
+    },
+    "data": {
+      "datasets_needed": [
+        "Yelp (Dataset Challenge)",
+        "MFC (Media Frames Corpus)",
+        "Congressional floor debates (Thomas 2006 / Yessenalina 2010 split)",
+        "Movies (Pang&Lee)",
+        "Congressional bills (Yano 2012)"
+      ],
+      "available_in_repo": false,
+      "downloaded": [],
+      "license_blocked": [
+        "Yelp Dataset (需签 Dataset Agreement 注册下载)",
+        "Media Frames Corpus (需向作者申请/签协议)"
+      ]
+    },
+    "run": {
+      "command": "./dtc --task train --trnfile /tmp/nonexistent.txt",
+      "status": "binary 启动成功但无训练数据;仓库未提供任何数据、DPLP 篇章解析输出、超参脚本",
+      "output_tail": "[dynet] memory allocation done. / INFO [TextClass] training file: /tmp/nonexistent.txt / dev file: (空)"
+    },
+    "actual_results": null,
+    "repro_verdict": "blocked_data_licensed",
+    "all_blockers": [
+      {
+        "verdict": "blocked_data_licensed",
+        "confirmed_by": "static",
+        "detail": "五个数据集全不在仓库,Yelp Dataset Challenge 与 Media Frames Corpus 均需签署协议/作者授权;且模型输入需 DPLP 篇章解析器的树结构输出,仓库既不含解析结果也不含调用脚本,pythoncode/ 只有 yelp/rst 读取器"
+      },
+      {
+        "verdict": "blocked_code",
+        "confirmed_by": "execution",
+        "detail": "make 失败:(a) 与 DyNet≥2.0.1 不兼容(boost serialization 已移除),必须用 v1.1;(b) Makefile 的 -I./dynet/eigen 假定 Eigen 在 dynet 目录内;(c) Makefile 未编译 easylogging++.cc,链接报大量 el:: undefined。三点均需改 Makefile/pin 旧版依赖(我们仅在容器内以外部 el.o 变通链接,未改仓库)。另外 README 的编译/运行说明是 'TODO',无复现命令与超参"
+      }
+    ],
+    "blocker_attribution": "genuine",
+    "verdict_reason": "环境可在 ubuntu:18.04 + DyNet v1.1 下把 dtc 编出来并运行(需绕过 Makefile 的 easylogging++/Eigen 缺陷),但论文五个数据集、DPLP 篇章解析输出和复现脚本全部缺失,其中 Yelp/MFC 需授权,因此最早的实质卡点是数据。"
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v12_repro_docker_api__default__jiyfeng-disco4textcat-db7a2dc__5dee7528.jsonl"
+}

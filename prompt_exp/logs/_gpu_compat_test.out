@@ -1,0 +1,23 @@
+===== pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime run1: exited after 1405s
+torch 1.11.0 cuda_build 11.3 available True
+device NVIDIA GeForce RTX 5060 Laptop GPU cap (12, 0)
+arch_list ['sm_37', 'sm_50', 'sm_60', 'sm_61', 'sm_70', 'sm_75', 'sm_80', 'sm_86', 'compute_37']
+matmul OK 10926.56
+FAIL: RuntimeError Unable to find a valid cuDNN algorithm to run convolution
+If you want to use the NVIDIA GeForce RTX 5060 Laptop GPU GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+===== pytorch/pytorch:1.7.0-cuda11.0-cudnn8-runtime run1: exited after 1527s
+If you want to use the NVIDIA GeForce RTX 5060 Laptop GPU GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+torch 1.7.0 cuda_build 11.0 available True
+device NVIDIA GeForce RTX 5060 Laptop GPU cap (12, 0)
+arch_list ['sm_37', 'sm_50', 'sm_60', 'sm_61', 'sm_70', 'sm_75', 'sm_80', 'compute_37']
+matmul OK 44.1
+FAIL: RuntimeError Unable to find a valid cuDNN algorithm to run convolution
+===== pytorch/pytorch:1.4-cuda10.1-cudnn7-runtime run1: exited after 1112s
+torch 1.4.0 cuda_build 10.1 available True
+device NVIDIA GeForce RTX 5060 Laptop GPU cap (12, 0)
+arch_list n/a
+matmul OK -7514.74
+FAIL: RuntimeError cuDNN error: CUDNN_STATUS_EXECUTION_FAILED
+ALL DONE Thu Oct  8 22:42:28 CST 2026

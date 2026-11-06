@@ -1,0 +1,139 @@
+{
+  "run_id": "e215b109",
+  "repo": "falcondai-lm-steganography-f0ee4b0",
+  "variant": "v12_smoke_docker",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 494.0,
+  "n_events": 65,
+  "tool_call_count_actual": 9,
+  "num_turns": 10,
+  "total_cost_usd": 0.305879,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la; echo ---; cat README* 2>/dev/null; echo ---; cat requirements*.txt setup.py 2>/dev/null"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat .gitmodules; ls -R external | head; echo ---; cat core.py | head -40; echo ---; cat gpt_sample.py gptlm.py | head -80; ls samples | head"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "tail -40 core.py; echo ---; cat lm.py; echo ---; grep -rn \"api\\|openai\\|token\\|KEY\" --include=*.py -i . | grep -vi \"next_token\\|tokens\\|tokenize\" | head"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cp -r /home/katrinalinux/*falcondai-lm-steganography-f0ee4b0 /tmp/repo 2>/dev/null || cp -r . /tmp/repo; chmod -R u+w /tmp/repo; cd /tmp/repo && git clone -q --depth 1 https://github.com/falcondai/gpt-2.git external/gpt-2 && ls external/gpt-2 && cat external/gpt-2/download_model.py 2>/dev/null | head -30"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat /tmp/repo/external/gpt-2/download_model.sh; cd /tmp/repo/external/gpt-2 && (bash download_model.sh 117M > /tmp/dl.log 2>&1; tail -3 /tmp/dl.log; du -sh models/117M; ls models/117M)",
+        "timeout": 400000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/repo/external/gpt-2/models/117M && ls -l && head -c 300 model.ckpt.index; echo; curl -sI https://storage.googleapis.com/gpt-2/models/117M/hparams.json | head -3"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/repo/external/gpt-2/models/117M && for f in checkpoint encoder.json hparams.json model.ckpt.data-00000-of-00001 model.ckpt.index model.ckpt.meta vocab.bpe; do curl -sf -o $f https://openaipublic.blob.core.windows.net/gpt-2/models/124M/$f || echo FAIL $f; done; ls -l; du -sh .",
+        "timeout": 500000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/repo && timeout 900 docker run --rm -v /tmp/repo:/repo -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c \"pip install -q regex==2017.4.5 2>&1 | tail -2; python core.py\" 2>&1 | tail -30",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/repo && timeout 900 docker run --rm -e PYTHONIOENCODING=utf-8 -v /tmp/repo:/repo -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c \"pip install -q regex==2017.4.5 >/dev/null 2>&1; python core.py\" 2>&1 | grep -v \"allocator\\|cpu_feature\" | tail -25",
+        "timeout": 900000
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [
+    "Exit code 1\ntotal 156\ndr-xr-xr-x 4 katrinalinux katrinalinux  4096 Aug  8  2019 .\ndrwxr-xr-x 3 katrinalinux katrinalinux  4096 Sep 28 13:18 ..\n-r--r--r-- 1 katrinalinux katrinalinux  1203 Aug  8  2019 .gitignore\n-r--r--r-- 1 katrinalinux katrinalinux    98 Aug  8  2019 .gitmodules\n-r--r--r-- 1 katri"
+  ],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790586000,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "Full encode→decode round-trip passed with the real GPT-2 model.\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/P19-1422/\",\n  \"entrypoint\": {\"command\": \"python core.py\", \"source\": \"README Usage: core.py is the minimal working example of encoding/decoding the stegosystem (patient-Huffman)\"},\n  \"env_analysis\": {\n    \"python_version_required\": \"3.6 (py3, uses f-less but importlib.util spec_from_file_location + super() no-arg)\",\n    \"framework_required\": \"tensorflow 1.12.0\",\n    \"evidence\": \"requirements.txt pins tensorflow==1.12.0, numpy==1.16.1, regex==2017.4.5 (GPT-2 encoder dep)\"\n  },\n  \"external_apis\": [],\n  \"data\": {\n    \"datasets_needed\": [\"GPT-2-117M pretrained checkpoint (no training dataset needed for smoke test)\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\"dataset\": \"GPT-2 117M/124M checkpoint\", \"state\": \"public_auto\", \"source\": \"repo's external/gpt-2/download_model.sh points at storage.googleapis.com/gpt-2/... which now 404s (NoSuchKey); downloaded instead from https://openaipublic.blob.core.windows.net/gpt-2/models/124M/ (same weights, OpenAI renamed 117M→124M)\", \"version_uncertain\": false}\n    ],\n    \"used_for_smoke\": \"real\"\n  },\n  \"docker\": {\n    \"images_tried\": [\"tensorflow/tensorflow:1.12.0-py3\"],\n    \"image_used\": \"tensorflow/tensorflow:1.12.0-py3\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run --rm -e PYTHONIOENCODING=utf-8 -v /tmp/repo:/repo -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c 'pip install -q regex==2017.4.5; python core.py'\"\n  },\n  \"install\": {\"status\": \"success\", \"log_tail\": \"only extra dep needed: regex==2017.4.5 (TF 1.12/numpy preinstalled in image). git submodule external/gpt-2 cloned from https://github.com/falcondai/gpt-2.git (repo shipped empty submodule dir).\"},\n  \"run\": {\n    \"command\": \"python core.py\",\n    \"status\": \"success\",\n    \"output_tail\": \"[1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0]\\n0 1507 18\\n1 314 ĠI\\n2 1422 Ġdidn\\n3 470 't\\n4 765 Ġwant\\n5 15247 ĠWWE\\n6 338 's\\n7 5462 Ġcrew\\n8 284 Ġto\\n18 I didn't want WWE's crew to\\n[1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0]\\nTrue\"\n  },\n  \"smoke_verdict\": \"smoke_passed\",\n  \"all_blockers\": [],\n  \"blocker_attribution\": null,\n  \"verdict_reason\": \"在 tensorflow/tensorflow:1.12.0-py3 容器中,克隆 gpt-2 子模块并从 openaipublic 下载真实 GPT-2 124M(=117M)权重后,core.py 的 patient-Huffman 全流程跑通:16 位密文嵌入为流畅 stegotext 并无损恢复(True);仓库自带的 download_model.sh 旧 GCS 链接已 404,但存在等价官方镜像,未修改任何代码。\"\n}\n```\n\nNotes worth flagging (not blockers): the bundled `download_model.sh` URL (`storage.googleapis.com/gpt-2`) is dead — you must fetch from `openaipublic.blob.core.windows.net/gpt-2/models/124M/`; and the container needs `PYTHONIOENCODING=utf-8` (or a UTF-8 locale), otherwise `print(lm.enc.decoder[ind])` raises `UnicodeEncodeError` on ascii stdout — an environment setting, no code change.",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/P19-1422/",
+    "entrypoint": {
+      "command": "python core.py",
+      "source": "README Usage: core.py is the minimal working example of encoding/decoding the stegosystem (patient-Huffman)"
+    },
+    "env_analysis": {
+      "python_version_required": "3.6 (py3, uses f-less but importlib.util spec_from_file_location + super() no-arg)",
+      "framework_required": "tensorflow 1.12.0",
+      "evidence": "requirements.txt pins tensorflow==1.12.0, numpy==1.16.1, regex==2017.4.5 (GPT-2 encoder dep)"
+    },
+    "external_apis": [],
+    "data": {
+      "datasets_needed": [
+        "GPT-2-117M pretrained checkpoint (no training dataset needed for smoke test)"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "GPT-2 117M/124M checkpoint",
+          "state": "public_auto",
+          "source": "repo's external/gpt-2/download_model.sh points at storage.googleapis.com/gpt-2/... which now 404s (NoSuchKey); downloaded instead from https://openaipublic.blob.core.windows.net/gpt-2/models/124M/ (same weights, OpenAI renamed 117M→124M)",
+          "version_uncertain": false
+        }
+      ],
+      "used_for_smoke": "real"
+    },
+    "docker": {
+      "images_tried": [
+        "tensorflow/tensorflow:1.12.0-py3"
+      ],
+      "image_used": "tensorflow/tensorflow:1.12.0-py3",
+      "pull_success": true,
+      "run_command": "docker run --rm -e PYTHONIOENCODING=utf-8 -v /tmp/repo:/repo -w /repo tensorflow/tensorflow:1.12.0-py3 bash -c 'pip install -q regex==2017.4.5; python core.py'"
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "only extra dep needed: regex==2017.4.5 (TF 1.12/numpy preinstalled in image). git submodule external/gpt-2 cloned from https://github.com/falcondai/gpt-2.git (repo shipped empty submodule dir)."
+    },
+    "run": {
+      "command": "python core.py",
+      "status": "success",
+      "output_tail": "[1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0]\n0 1507 18\n1 314 ĠI\n2 1422 Ġdidn\n3 470 't\n4 765 Ġwant\n5 15247 ĠWWE\n6 338 's\n7 5462 Ġcrew\n8 284 Ġto\n18 I didn't want WWE's crew to\n[1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0]\nTrue"
+    },
+    "smoke_verdict": "smoke_passed",
+    "all_blockers": [],
+    "blocker_attribution": null,
+    "verdict_reason": "在 tensorflow/tensorflow:1.12.0-py3 容器中,克隆 gpt-2 子模块并从 openaipublic 下载真实 GPT-2 124M(=117M)权重后,core.py 的 patient-Huffman 全流程跑通:16 位密文嵌入为流畅 stegotext 并无损恢复(True);仓库自带的 download_model.sh 旧 GCS 链接已 404,但存在等价官方镜像,未修改任何代码。"
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v12_smoke_docker__default__falcondai-lm-steganography-f0ee4b0__e215b109.jsonl"
+}

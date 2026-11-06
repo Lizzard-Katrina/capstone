@@ -1,0 +1,87 @@
+{
+  "run_id": "4f12d554",
+  "repo": "lephong-diffmetric_coref-37543d5",
+  "variant": "v8_repro_paper",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 21.7,
+  "n_events": 15,
+  "tool_call_count_actual": 3,
+  "num_turns": 4,
+  "total_cost_usd": 0.0910539,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la && cat README* 2>/dev/null | head -200"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "echo \"---data---\"; ls -la data; echo \"---modifiedBCS---\"; ls -la modifiedBCS; echo \"---src---\"; find src -maxdepth 2; echo \"---py---\"; which python python3; python3 --version; pip show tensorflow 2>&1 | head -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls data/toy | head; echo ---; grep -i \"conll\\|ontonotes\\|license\" modifiedBCS/README.md | head -20; echo ---; pip index versions tensorflow 2>&1 | head -5"
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790179200,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "Confirmed: requires CoNLL-2012 English data (OntoNotes, requires LDC license), no dataset shipped except a tiny \"toy\" sample. Also requires TensorFlow 0.7 (ancient, TF1-era `tf.while_loop`/`tf.batch_matmul` API), not installable on current Python 3.12 environment. No GPU check needed since blocked earlier.\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/K17-1039/\",\n  \"paper_accessible\": true,\n  \"paper_metrics_claimed\": [\n    {\"metric\": \"CoNLL F1 (avg MUC/B3/CEAFe)\", \"value\": \"~65.29 (unsup optimizing metrics)\", \"dataset\": \"CoNLL-2012 English test\", \"setting\": \"best system in paper\"},\n    {\"metric\": \"MUC F1 / B3 F1 / CEAFe F1\", \"value\": \"reported per-metric optimized systems in Table 2/3\", \"dataset\": \"CoNLL-2012 English\", \"setting\": \"various loss configurations\"}\n  ],\n  \"requirements\": {\n    \"datasets\": [\"CoNLL-2012 English (OntoNotes 5.0) train/dev/test via LDC + BCS feature extraction\"],\n    \"dataset_available_locally\": false,\n    \"needs_license\": true,\n    \"pretrained_checkpoints\": [],\n    \"gpu_required\": false\n  },\n  \"repro_commands_from_readme\": [\n    \"generate data following https://github.com/swiseman/nn_coref using included modifiedBCS\",\n    \"./train_supgen_coref.sh\"\n  ],\n  \"install\": {\n    \"status\": \"not_attempted\",\n    \"log_tail\": \"pip show tensorflow -> Package(s) not found: tensorflow; repo requires TensorFlow 0.7 (very old TF1 API, e.g. tf.while_loop old signature, tf.batch_matmul, tf.concat(1,...)) which is not installable under current Python 3.12 environment; only tensorflow>=2.16 available via pip index.\"\n  },\n  \"blocker\": \"仓库只自带一个极小的 toy 数据目录(data/toy),真正复现需要 CoNLL-2012 英文数据(OntoNotes,需 LDC 授权)并用仓库自带的 modifiedBCS(基于 Berkeley Coref System)先做特征抽取,该步骤本身还需要额外的 Java/Scala 环境(build.sbt)。同时代码要求 TensorFlow 0.7(2016年的旧版 TF1 API),在当前 Python 3.12 环境下无法安装该版本,与现有可用 TensorFlow(2.16+)API 不兼容。两个独立的阻塞点在第三步评估阶段即已确认,未执行任何训练脚本。\",\n  \"actual_results\": null,\n  \"repro_verdict\": \"blocked_data\",\n  \"verdict_reason\": \"核心训练数据(CoNLL-2012/OntoNotes)需要LDC授权且仓库未附带,同时依赖的TensorFlow 0.7在当前环境不可安装,双重阻塞导致无法执行 train_supgen_coref.sh 复现论文数字。\"\n}\n```",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/K17-1039/",
+    "paper_accessible": true,
+    "paper_metrics_claimed": [
+      {
+        "metric": "CoNLL F1 (avg MUC/B3/CEAFe)",
+        "value": "~65.29 (unsup optimizing metrics)",
+        "dataset": "CoNLL-2012 English test",
+        "setting": "best system in paper"
+      },
+      {
+        "metric": "MUC F1 / B3 F1 / CEAFe F1",
+        "value": "reported per-metric optimized systems in Table 2/3",
+        "dataset": "CoNLL-2012 English",
+        "setting": "various loss configurations"
+      }
+    ],
+    "requirements": {
+      "datasets": [
+        "CoNLL-2012 English (OntoNotes 5.0) train/dev/test via LDC + BCS feature extraction"
+      ],
+      "dataset_available_locally": false,
+      "needs_license": true,
+      "pretrained_checkpoints": [],
+      "gpu_required": false
+    },
+    "repro_commands_from_readme": [
+      "generate data following https://github.com/swiseman/nn_coref using included modifiedBCS",
+      "./train_supgen_coref.sh"
+    ],
+    "install": {
+      "status": "not_attempted",
+      "log_tail": "pip show tensorflow -> Package(s) not found: tensorflow; repo requires TensorFlow 0.7 (very old TF1 API, e.g. tf.while_loop old signature, tf.batch_matmul, tf.concat(1,...)) which is not installable under current Python 3.12 environment; only tensorflow>=2.16 available via pip index."
+    },
+    "blocker": "仓库只自带一个极小的 toy 数据目录(data/toy),真正复现需要 CoNLL-2012 英文数据(OntoNotes,需 LDC 授权)并用仓库自带的 modifiedBCS(基于 Berkeley Coref System)先做特征抽取,该步骤本身还需要额外的 Java/Scala 环境(build.sbt)。同时代码要求 TensorFlow 0.7(2016年的旧版 TF1 API),在当前 Python 3.12 环境下无法安装该版本,与现有可用 TensorFlow(2.16+)API 不兼容。两个独立的阻塞点在第三步评估阶段即已确认,未执行任何训练脚本。",
+    "actual_results": null,
+    "repro_verdict": "blocked_data",
+    "verdict_reason": "核心训练数据(CoNLL-2012/OntoNotes)需要LDC授权且仓库未附带,同时依赖的TensorFlow 0.7在当前环境不可安装,双重阻塞导致无法执行 train_supgen_coref.sh 复现论文数字。"
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v8_repro_paper__default__lephong-diffmetric_coref-37543d5__4f12d554.jsonl"
+}

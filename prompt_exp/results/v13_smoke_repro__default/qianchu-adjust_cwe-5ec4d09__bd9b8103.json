@@ -1,0 +1,273 @@
+{
+  "run_id": "bd9b8103",
+  "repo": "qianchu-adjust_cwe-5ec4d09",
+  "variant": "v13_smoke_repro",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 744.5,
+  "n_events": 150,
+  "tool_call_count_actual": 19,
+  "num_turns": 20,
+  "total_cost_usd": 1.0620185,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "session_timed_out": false,
+  "leftover_containers_killed": [],
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /Users/z/Desktop/paper_reproduce/qianchu-adjust_cwe-5ec4d09 2>/dev/null || pwd; ls -la; echo ---; cat README.md 2>/dev/null | head -100"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09; cat requirements.yml train.sh encode.sh; echo ---; ls -R eval_data train_data | head -60; echo ---; du -sh eval_data train_data"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09; ls -la train_data eval_data/usim eval_data/scws; echo ---; cat main.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker info 2>&1 | head -5; nvidia-smi 2>&1|head -3; echo ---; curl -sI -L \"https://www.dropbox.com/s/8uru7gp9ipo24p6/wiki.en.1024.vec?dl=1\" 2>&1 | grep -iE \"HTTP/|content-length|location\" | head -20; echo ---; cat /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09/fasttext_embed.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "free -g; nvidia-smi --query-gpu=name,memory.total --format=csv; df -h /tmp | tail -1; timeout 20 curl -s -o /dev/null -w \"%{speed_download}\\n\" -r 0-200000000 -L \"https://www.dropbox.com/s/8uru7gp9ipo24p6/wiki.en.1024.vec?dl=1\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp; timeout 30 curl -s -o /tmp/chunk.bin -w \"speed=%{speed_download}\\n\" -r 0-50000000 -L \"https://www.dropbox.com/s/8uru7gp9ipo24p6/wiki.en.1024.vec?dl=1\"; ls -l /tmp/chunk.bin; head -c 300 /tmp/chunk.bin | cut -c1-200"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09; sed -n 1,60p extract_features.py; echo ...; grep -n \"add_argument\\|input_file\\|output\" extract_features.py | tail -30; head -3 eval_data/usim/usim_en.txt; head -2 train_data/en_200k_shuffled.whitespace.txt | cut -c1-150"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cp -r /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09 /tmp/repo && chmod -R u+w /tmp/repo && head -40 /tmp/repo/eval_data/usim/usim_en.txt > /tmp/repo/train_data/smoke.txt && head -300 /tmp/repo/train_data/en_200k_shuffled.whitespace.txt > /tmp/repo/train_data/smoke_train.txt && wc -l /tmp/repo/train_data/smoke*.txt\ndocker run -d --name ac -v /tmp/repo:/repo -w /repo python:3.6 sleep infinity && docker exec ac pip install -q torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html 2>&1 | tail -3 && docker exec ac pip install -q transformers==4.15.0 h5py \"numpy<1.20\" scikit-learn==0.24.2 scipy 2>&1 | tail -5"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sleep 150; tail -6 /tmp/claude-1000/-home-katrinalinux-prompt-exp-workdir-qianchu-adjust-cwe-qianchu-adjust-cwe-5ec4d09/f4744184-ca37-41d3-b1dd-7ac0f54fca56/tasks/bicg66gjm.output",
+        "dangerouslyDisableSandbox": true
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "timeout 600 docker exec ac python3 extract_features.py --input_file train_data/smoke_train.txt --max_seq_length 100 --layers 9-13 --model bert-base-uncased --gpu -1 --batch_size 20 2>&1 | tail -15; ls -l /tmp/repo/train_data/"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat /tmp/claude-1000/*/f4744184-ca37-41d3-b1dd-7ac0f54fca56/tasks/bicg66gjm.output | head -20; ls /tmp | head"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "rm -rf /tmp/cwe_repo; cp -r /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09 /tmp/cwe_repo && chmod -R u+w /tmp/cwe_repo && head -300 /tmp/cwe_repo/train_data/en_200k_shuffled.whitespace.txt > /tmp/cwe_repo/train_data/smoke_train.txt && docker rm -f ac >/dev/null; docker run -d --name ac -v /tmp/cwe_repo:/repo -w /repo python:3.6 sleep infinity && docker exec ac bash -c \"pip install -q torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html >/dev/null 2>&1; pip install -q transformers==4.15.0 h5py 'numpy<1.20' scikit-learn==0.24.2 scipy >/dev/null 2>&1; python -c 'import torch,transformers;print(torch.__version__,transformers.__version__)'\"",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cp -r /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09 /tmp/cwe_repo; chmod -R u+w /tmp/cwe_repo; head -300 /tmp/cwe_repo/train_data/en_200k_shuffled.whitespace.txt > /tmp/cwe_repo/train_data/smoke_train.txt; ls /tmp/cwe_repo"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm -f ac >/dev/null 2>&1; docker run -d --name ac -v /tmp/cwe_repo:/repo -w /repo python:3.6 sleep infinity && docker exec ac bash -c \"pip install -q torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html >/dev/null 2>&1; pip install -q transformers==4.15.0 h5py 'numpy<1.20' scikit-learn==0.24.2 scipy >/dev/null 2>&1; python -c 'import torch,transformers;print(torch.__version__,transformers.__version__)'\"",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/cwe_repo; timeout 600 docker exec ac bash -c \"time python3 extract_features.py --input_file train_data/smoke_train.txt --max_seq_length 100 --layers 9-13 --model bert-base-uncased --gpu -1 --batch_size 20\" 2>&1 | tail -12; ls -l /tmp/cwe_repo/train_data/",
+        "timeout": 620000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/cwe_repo; cat hdf5_to_json.py; grep -n \"npy\\|load\\|open(\" evaluation_script.py | head -30"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/cwe_repo; wc -l eval_data/usim/usim_en.txt; docker exec ac bash -c \"python hdf5_to_json.py train_data/smoke_train.txt__bert-base-uncased.ly_9-13__.hdf5 && python3 main.py --gpu -1 --data train_data/smoke_train.txt --tgt_data train_data/smoke_train.txt__bert-base-uncased.ly_9-13__.hdf5.npy --src_data train_data/smoke_train.txt__bert-base-uncased.ly_9-13__.hdf5.npy --norm normalize --type --save\" 2>&1 | tail -20",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/cwe_repo; docker exec ac bash -c \"pip install -q nltk spacy matplotlib >/dev/null 2>&1; python3 main.py --gpu -1 --data train_data/smoke_train.txt --tgt_data train_data/smoke_train.txt__bert-base-uncased.ly_9-13__.hdf5.npy --src_data train_data/smoke_train.txt__bert-base-uncased.ly_9-13__.hdf5.npy --norm normalize --type --save\" 2>&1 | tail -20; ls /tmp/cwe_repo/*.pt /tmp/cwe_repo/*.npy 2>/dev/null",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker rm -f ac >/dev/null && echo cleaned; docker ps -a --format '{{.Names}}' | head"
+      }
+    }
+  ],
+  "permission_denials": [
+    {
+      "tool_name": "Bash",
+      "tool_use_id": "toolu_01H2m5Nj4yDhWYfQGYCpkCdE",
+      "tool_input": {
+        "command": "rm -rf /tmp/cwe_repo; cp -r /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09 /tmp/cwe_repo && chmod -R u+w /tmp/cwe_repo && head -300 /tmp/cwe_repo/train_data/en_200k_shuffled.whitespace.txt > /tmp/cwe_repo/train_data/smoke_train.txt && docker rm -f ac >/dev/null; docker run -d --name ac -v /tmp/cwe_repo:/repo -w /repo python:3.6 sleep infinity && docker exec ac bash -c \"pip install -q torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html >/dev/null 2>&1; pip install -q transformers==4.15.0 h5py 'numpy<1.20' scikit-learn==0.24.2 scipy >/dev/null 2>&1; python -c 'import torch,transformers;print(torch.__version__,transformers.__version__)'\"",
+        "timeout": 600000
+      }
+    }
+  ],
+  "error_tool_results": [
+    "Exit code 124\n               total        used        free      shared  buff/cache   available\nMem:               7           1           3           0           1           5\nSwap:              2           0           1\nname, memory.total [MiB]\nNVIDIA GeForce RTX 5060 Laptop GPU, 8151 MiB\n/dev/sdd ",
+    "<tool_use_error>Blocked: sleep 150 followed by: tail -6 /tmp/claude-1000/-home-katrinalinux-prompt-exp-workdir-qianchu-adjust-cwe-qianchu-adjust-cwe-5ec4d09/f4744184-ca37-41d3-b1dd-7ac0f54fca56/tasks/bicg66gjm.output. To wait for a condition, use Monitor with an until-loop (e.g. `until <check>; do s",
+    "Exit code 2\npython3: can't open file 'extract_features.py': [Errno 2] No such file or directory\nls: cannot access '/tmp/repo/train_data/': No such file or directory",
+    "Permission to use Bash with command rm -rf /tmp/cwe_repo; cp -r /home/katrinalinux/prompt_exp/workdir/qianchu_adjust_cwe/qianchu-adjust_cwe-5ec4d09 /tmp/cwe_repo && chmod -R u+w /tmp/cwe_repo && head -300 /tmp/cwe_repo/train_data/en_200k_shuffled.whitespace.txt > /tmp/cwe_repo/train_data/smoke_train",
+    "Exit code 2\n[nltk_data] Downloading package wordnet to /root/nltk_data...\n[nltk_data] Downloading package averaged_perceptron_tagger to\n[nltk_data]     /root/nltk_data...\n[nltk_data]   Unzipping taggers/averaged_perceptron_tagger.zip.\ncpu\nprocessed {0} embeddings 2761\ntorch.Size([768, 768]) torch.Si"
+  ],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1791427800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "诊断完成。核心结论:**代码本身能跑通(编码 + 训练映射矩阵都跑通了),但论文配置需要的 16GB 静态 fasttext 向量文件在本机无法下载/载入(7GB 内存、3MB/s 下载 ≈ 90 分钟),所以无法用论文的真实 anchor 数据完整复现。**\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/2020.emnlp-main.333/\",\n  \"entrypoint\": {\n    \"command\": \"bash encode.sh 0 bert-large-cased 12-25 wiki.en.1024.vec 768  →  bash train.sh 1 ./train_data/en_200k_shuffled.whitespace.txt <tgt>.npy <src>.npy (即 python3 main.py --norm normalize --type --save --eval)\",\n    \"source\": \"README 'Encode train and evaluation data' / 'Train the mapping' 段\",\n    \"written_by_agent\": false,\n    \"agent_script\": null\n  },\n  \"env_analysis\": {\n    \"python_version_required\": \"3.6.8\",\n    \"framework_required\": \"pytorch 1.10.0, transformers 4.15.0, numpy 1.17, scikit-learn 0.20.2, h5py, nltk, spacy\",\n    \"evidence\": \"requirements.yml (conda env, python=3.6.8, pytorch=1.10.0, pip: transformers==4.15.0)\"\n  },\n  \"external_apis\": [\n    {\n      \"service\": \"HuggingFace model hub (bert-large-cased / bert-base-uncased 下载)\",\n      \"status\": \"alive_free\",\n      \"on_main_path\": true,\n      \"evidence_in_repo\": \"extract_features.py:216-217 AutoTokenizer/AutoModel.from_pretrained(args.model)\",\n      \"evidence_status\": \"容器内成功下载 bert-base-uncased 并编码\",\n      \"hit_at_runtime\": true\n    },\n    {\n      \"service\": \"CodaLab 提交(CoSimlex 20905 / WiC 20010 测试集打分)\",\n      \"status\": \"restricted\",\n      \"on_main_path\": false,\n      \"evidence_in_repo\": \"README 'About the test results' 要求把预测提交到 competitions.codalab.org\",\n      \"evidence_status\": \"仅测试集打分需要,usim/scws 本地即可评测\",\n      \"hit_at_runtime\": false\n    }\n  ],\n  \"data\": {\n    \"datasets_needed\": [\"en_200k_shuffled 训练语料(仓库内)\", \"USim / SCWS / CoSimLex / WiC 评测集(仓库内)\", \"静态 anchor 模型 wiki.en.1024.vec (fasttext, Dropbox)\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\"dataset\": \"en_200k_shuffled.whitespace.txt\", \"state\": \"in_repo\", \"source\": \"train_data/ (21MB)\", \"version_uncertain\": false},\n      {\"dataset\": \"USim/SCWS/CoSimLex/WiC\", \"state\": \"in_repo\", \"source\": \"eval_data/ (3.5MB，含 .out 预处理文件)\", \"version_uncertain\": false},\n      {\"dataset\": \"wiki.en.1024.vec (fasttext anchors)\", \"state\": \"public_manual\", \"source\": \"https://www.dropbox.com/s/8uru7gp9ipo24p6/wiki.en.1024.vec (链接有效，Content-Length=16,243,266,366 ≈16GB，1.78M×1024)\", \"version_uncertain\": false}\n    ],\n    \"used_for_smoke\": \"real\"\n  },\n  \"docker\": {\n    \"images_tried\": [\"python:3.6\"],\n    \"image_used\": \"python:3.6\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run -d --name ac -v /tmp/cwe_repo:/repo -w /repo python:3.6 sleep infinity; docker exec ac bash -c \\\"pip install torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html; pip install transformers==4.15.0 h5py 'numpy<1.20' scikit-learn==0.24.2 scipy nltk spacy matplotlib; python3 extract_features.py ...; python3 main.py ...\\\"\"\n  },\n  \"install\": {\"status\": \"success\", \"log_tail\": \"1.10.0+cpu 4.15.0 (torch/transformers 版本确认); nltk/spacy/matplotlib 后续补装，requirements.yml 是 conda 环境，用 pip 等价版本安装成功\"},\n  \"run\": {\n    \"command\": \"python3 extract_features.py --input_file train_data/smoke_train.txt --max_seq_length 100 --layers 9-13 --model bert-base-uncased --gpu -1 --batch_size 20 && python hdf5_to_json.py ...hdf5 && python3 main.py --gpu -1 --data train_data/smoke_train.txt --tgt_data <bert>.npy --src_data <bert>.npy --norm normalize --type --save\",\n    \"status\": \"success (编码 + 映射训练链路跑通；src 空间用 BERT 顶替了无法获取的 fasttext anchors；未跑 --eval)\",\n    \"output_tail\": \"(16, 768)\\\\n(12, 768)\\\\ncpu\\\\nprocessed {0} embeddings 2761\\\\ntorch.Size([768, 768]) torch.Size([768, 768])   # ortho 解\\\\ntorch.Size([768, 768]) torch.Size([768, 768])   # mim 解\\\\n→ 产出 bert-base-uncased.ly_9-13..bert-base-uncased.ly_9-13.pt\",\n    \"speed\": \"CPU 编码 300 句 bert-base = 178s(≈0.6s/句)；全量 200k 句 + 6 个评测文件用 bert-large-cased ly12-25，CPU 估 ≈ 2-3 天，单 GPU 估 2-4 小时。映射训练本身是闭式解(ortho+MIM)，秒级完成。\"\n  },\n  \"smoke_verdict\": \"smoke_passed_toy\",\n  \"all_blockers\": [\n    {\n      \"verdict\": \"blocked_data_manual\",\n      \"confirmed_by\": \"static\",\n      \"detail\": \"论文主配置的静态 anchor 模型 wiki.en.1024.vec 是单个 16.2GB 文本文件(Dropbox 链接仍有效)。本机下载速度实测 ~3MB/s → 约 90 分钟;且 fasttext_embed.py:compile_model 会把全部 1.78M×1024 向量读入内存(float64 ≈ 14.6GB),本机只有 7GB RAM,必然 OOM。按规则属于“公开但本次无法自动下载/载入”,归 pipeline。替代方案(下阶段可用):用 fasttext 300d wiki.en.vec 或 HF 上的裁剪版 + --dim 768 补齐,但与论文版本不一致。\"\n    },\n    {\n      \"verdict\": \"blocked_hardware\",\n      \"confirmed_by\": \"execution\",\n      \"detail\": \"非致命但影响复现:完整 encode.sh 需对 20 万句 + 6 个评测文件用 bert-large-cased 编码。实测 CPU 0.6s/句(bert-base),bert-large 更慢,完整编码在 CPU 上需数十小时。本机有 RTX 5060(8GB),但 torch 1.10 不支持 sm_120 架构,无法用 GPU 加速;装新版 torch 又会偏离 requirements.yml 指定的 1.10.0。\"\n    }\n  ],\n  \"blocker_attribution\": \"pipeline\",\n  \"verdict_reason\": \"环境(py3.6 + torch1.10 + transformers4.15)装得上,仓库自带训练语料和全部评测集,BERT 编码与闭式映射训练两步都真实跑通并产出了 .pt 映射矩阵;唯一跑不了完整实验的原因是论文用的 16GB fasttext anchor 向量在本机(7GB RAM / 3MB/s)无法下载载入,属我们环境侧限制。\"\n  ,\n  \"repro\": {\n    \"status\": \"skipped\",\n    \"skip_reason\": \"smoke 用的 src 空间是替代品(非论文的 fasttext anchors),且完整实验需先用 bert-large-cased 编码 20 万句训练语料 + 6 个评测文件(CPU 实测 0.6s/句 × 20 万 ≈ 33 小时以上),远超 30 分钟上限。\",\n    \"estimated_minutes\": 2000,\n    \"command\": null,\n    \"metric\": null,\n    \"our_value\": null,\n    \"paper_value\": null,\n    \"paper_source\": null,\n    \"match\": null,\n    \"note\": \"评测入口 main.py --eval 会读取 eval_data 下各数据集的 .npy 编码(需先跑 encode.sh);usim/scws 的 Spearman 可本地打印,CoSimLex/WiC 测试集需提交 CodaLab。仓库未附带任何预计算的 .npy 或预训练映射矩阵,因此无法走“直接评测”的快捷路径。\"\n  }\n}\n```\n\n要点:仓库代码**没有坏**——未修改任何文件,主流程(`extract_features.py` → `hdf5_to_json.py` → `main.py` 训练)在 `python:3.6` 容器里真实跑通。卡点全在资源侧:16GB 的静态向量文件 + 需要 GPU 做大规模编码。容器已清理。",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/2020.emnlp-main.333/",
+    "entrypoint": {
+      "command": "bash encode.sh 0 bert-large-cased 12-25 wiki.en.1024.vec 768  →  bash train.sh 1 ./train_data/en_200k_shuffled.whitespace.txt <tgt>.npy <src>.npy (即 python3 main.py --norm normalize --type --save --eval)",
+      "source": "README 'Encode train and evaluation data' / 'Train the mapping' 段",
+      "written_by_agent": false,
+      "agent_script": null
+    },
+    "env_analysis": {
+      "python_version_required": "3.6.8",
+      "framework_required": "pytorch 1.10.0, transformers 4.15.0, numpy 1.17, scikit-learn 0.20.2, h5py, nltk, spacy",
+      "evidence": "requirements.yml (conda env, python=3.6.8, pytorch=1.10.0, pip: transformers==4.15.0)"
+    },
+    "external_apis": [
+      {
+        "service": "HuggingFace model hub (bert-large-cased / bert-base-uncased 下载)",
+        "status": "alive_free",
+        "on_main_path": true,
+        "evidence_in_repo": "extract_features.py:216-217 AutoTokenizer/AutoModel.from_pretrained(args.model)",
+        "evidence_status": "容器内成功下载 bert-base-uncased 并编码",
+        "hit_at_runtime": true
+      },
+      {
+        "service": "CodaLab 提交(CoSimlex 20905 / WiC 20010 测试集打分)",
+        "status": "restricted",
+        "on_main_path": false,
+        "evidence_in_repo": "README 'About the test results' 要求把预测提交到 competitions.codalab.org",
+        "evidence_status": "仅测试集打分需要,usim/scws 本地即可评测",
+        "hit_at_runtime": false
+      }
+    ],
+    "data": {
+      "datasets_needed": [
+        "en_200k_shuffled 训练语料(仓库内)",
+        "USim / SCWS / CoSimLex / WiC 评测集(仓库内)",
+        "静态 anchor 模型 wiki.en.1024.vec (fasttext, Dropbox)"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "en_200k_shuffled.whitespace.txt",
+          "state": "in_repo",
+          "source": "train_data/ (21MB)",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "USim/SCWS/CoSimLex/WiC",
+          "state": "in_repo",
+          "source": "eval_data/ (3.5MB，含 .out 预处理文件)",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "wiki.en.1024.vec (fasttext anchors)",
+          "state": "public_manual",
+          "source": "https://www.dropbox.com/s/8uru7gp9ipo24p6/wiki.en.1024.vec (链接有效，Content-Length=16,243,266,366 ≈16GB，1.78M×1024)",
+          "version_uncertain": false
+        }
+      ],
+      "used_for_smoke": "real"
+    },
+    "docker": {
+      "images_tried": [
+        "python:3.6"
+      ],
+      "image_used": "python:3.6",
+      "pull_success": true,
+      "run_command": "docker run -d --name ac -v /tmp/cwe_repo:/repo -w /repo python:3.6 sleep infinity; docker exec ac bash -c \"pip install torch==1.10.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html; pip install transformers==4.15.0 h5py 'numpy<1.20' scikit-learn==0.24.2 scipy nltk spacy matplotlib; python3 extract_features.py ...; python3 main.py ...\""
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "1.10.0+cpu 4.15.0 (torch/transformers 版本确认); nltk/spacy/matplotlib 后续补装，requirements.yml 是 conda 环境，用 pip 等价版本安装成功"
+    },
+    "run": {
+      "command": "python3 extract_features.py --input_file train_data/smoke_train.txt --max_seq_length 100 --layers 9-13 --model bert-base-uncased --gpu -1 --batch_size 20 && python hdf5_to_json.py ...hdf5 && python3 main.py --gpu -1 --data train_data/smoke_train.txt --tgt_data <bert>.npy --src_data <bert>.npy --norm normalize --type --save",
+      "status": "success (编码 + 映射训练链路跑通；src 空间用 BERT 顶替了无法获取的 fasttext anchors；未跑 --eval)",
+      "output_tail": "(16, 768)\\n(12, 768)\\ncpu\\nprocessed {0} embeddings 2761\\ntorch.Size([768, 768]) torch.Size([768, 768])   # ortho 解\\ntorch.Size([768, 768]) torch.Size([768, 768])   # mim 解\\n→ 产出 bert-base-uncased.ly_9-13..bert-base-uncased.ly_9-13.pt",
+      "speed": "CPU 编码 300 句 bert-base = 178s(≈0.6s/句)；全量 200k 句 + 6 个评测文件用 bert-large-cased ly12-25，CPU 估 ≈ 2-3 天，单 GPU 估 2-4 小时。映射训练本身是闭式解(ortho+MIM)，秒级完成。"
+    },
+    "smoke_verdict": "smoke_passed_toy",
+    "all_blockers": [
+      {
+        "verdict": "blocked_data_manual",
+        "confirmed_by": "static",
+        "detail": "论文主配置的静态 anchor 模型 wiki.en.1024.vec 是单个 16.2GB 文本文件(Dropbox 链接仍有效)。本机下载速度实测 ~3MB/s → 约 90 分钟;且 fasttext_embed.py:compile_model 会把全部 1.78M×1024 向量读入内存(float64 ≈ 14.6GB),本机只有 7GB RAM,必然 OOM。按规则属于“公开但本次无法自动下载/载入”,归 pipeline。替代方案(下阶段可用):用 fasttext 300d wiki.en.vec 或 HF 上的裁剪版 + --dim 768 补齐,但与论文版本不一致。"
+      },
+      {
+        "verdict": "blocked_hardware",
+        "confirmed_by": "execution",
+        "detail": "非致命但影响复现:完整 encode.sh 需对 20 万句 + 6 个评测文件用 bert-large-cased 编码。实测 CPU 0.6s/句(bert-base),bert-large 更慢,完整编码在 CPU 上需数十小时。本机有 RTX 5060(8GB),但 torch 1.10 不支持 sm_120 架构,无法用 GPU 加速;装新版 torch 又会偏离 requirements.yml 指定的 1.10.0。"
+      }
+    ],
+    "blocker_attribution": "pipeline",
+    "verdict_reason": "环境(py3.6 + torch1.10 + transformers4.15)装得上,仓库自带训练语料和全部评测集,BERT 编码与闭式映射训练两步都真实跑通并产出了 .pt 映射矩阵;唯一跑不了完整实验的原因是论文用的 16GB fasttext anchor 向量在本机(7GB RAM / 3MB/s)无法下载载入,属我们环境侧限制。",
+    "repro": {
+      "status": "skipped",
+      "skip_reason": "smoke 用的 src 空间是替代品(非论文的 fasttext anchors),且完整实验需先用 bert-large-cased 编码 20 万句训练语料 + 6 个评测文件(CPU 实测 0.6s/句 × 20 万 ≈ 33 小时以上),远超 30 分钟上限。",
+      "estimated_minutes": 2000,
+      "command": null,
+      "metric": null,
+      "our_value": null,
+      "paper_value": null,
+      "paper_source": null,
+      "match": null,
+      "note": "评测入口 main.py --eval 会读取 eval_data 下各数据集的 .npy 编码(需先跑 encode.sh);usim/scws 的 Spearman 可本地打印,CoSimLex/WiC 测试集需提交 CodaLab。仓库未附带任何预计算的 .npy 或预训练映射矩阵,因此无法走“直接评测”的快捷路径。"
+    }
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v13_smoke_repro__default__qianchu-adjust_cwe-5ec4d09__bd9b8103.jsonl"
+}

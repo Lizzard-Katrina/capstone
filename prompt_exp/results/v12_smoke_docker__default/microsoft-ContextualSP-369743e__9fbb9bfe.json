@@ -1,0 +1,136 @@
+{
+  "run_id": "9fbb9bfe",
+  "repo": "microsoft-ContextualSP-369743e",
+  "variant": "v12_smoke_docker",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": -15.0,
+  "n_events": 31,
+  "tool_call_count_actual": 7,
+  "num_turns": 8,
+  "total_cost_usd": 0.22676249999999998,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls /Users/yz/Downloads/microsoft-ContextualSP-369743e 2>/dev/null || ls",
+        "description": "List repo root"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "pwd; ls -la",
+        "description": "Show cwd"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat README.md",
+        "description": "Read main README"
+      }
+    },
+    {
+      "name": "WebFetch",
+      "input": {
+        "url": "https://aclanthology.org/2022.emnlp-main.350/",
+        "prompt": "What is the paper title, abstract, datasets used, and code link?"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd knowledge_intensive_text_to_sql && ls -la && cat README.md",
+        "description": "Inspect target subproject"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /home/katrinalinux/prompt_exp/workdir/microsoft_contextualsp/microsoft-ContextualSP-369743e && grep -ril \"knowsql\\|regroup\" . | head -20; echo \"---\"; ls knowledge_intensive_text_to_sql/*",
+        "description": "Search for KnowSQL/ReGrouP anywhere"
+      }
+    },
+    {
+      "name": "WebSearch",
+      "input": {
+        "query": "KnowSQL dataset ReGrouP \"Knowledge-Intensive Text-to-SQL\" code release github"
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790586000,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "仓库中对应该论文的目录 `knowledge_intensive_text_to_sql/` 只有一个 51 字节的 README:`Code and dataset are under cleaning. Coming soon.` —— 没有任何代码、脚本或数据。全仓库 grep `knowsql|regroup` 也无命中(唯一命中是无关的 `basic_transition_function.py` 里的 regroup 变量)。因此没有入口可跑,不需要起 Docker。\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/2022.emnlp-main.350/\",\n  \"entrypoint\": {\n    \"command\": null,\n    \"source\": \"不存在。knowledge_intensive_text_to_sql/README.md 全文为 'Code and dataset are under cleaning. Coming soon.'(仓库快照日期 2023-11-10,论文发表于 2022-10)\"\n  },\n  \"env_analysis\": {\n    \"python_version_required\": \"unknown\",\n    \"framework_required\": \"unknown\",\n    \"evidence\": \"子目录内无 setup.py / requirements.txt / 任何 .py 文件,无法推断\"\n  },\n  \"external_apis\": [],\n  \"data\": {\n    \"datasets_needed\": [\"KnowSQL (论文自建 benchmark)\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\n        \"dataset\": \"KnowSQL\",\n        \"state\": \"link_dead\",\n        \"source\": \"论文称 'Code and data are available at' 本仓库,但仓库只有占位 README;WebSearch 未找到任何官方或第三方发布的 KnowSQL 下载点\",\n        \"version_uncertain\": true\n      }\n    ],\n    \"used_for_smoke\": \"none\"\n  },\n  \"docker\": {\n    \"images_tried\": [],\n    \"image_used\": null,\n    \"pull_success\": null,\n    \"run_command\": null\n  },\n  \"install\": {\"status\": \"skipped\", \"log_tail\": \"无 requirements/setup,无可安装内容\"},\n  \"run\": {\n    \"command\": null,\n    \"status\": \"skipped: no code and no runnable data in the repository\",\n    \"output_tail\": \"$ ls knowledge_intensive_text_to_sql/*\\nknowledge_intensive_text_to_sql/README.md\\n$ cat knowledge_intensive_text_to_sql/README.md\\nCode and dataset are under cleaning. Coming soon.\\n$ grep -ril 'knowsql\\\\|regroup' .\\n./semantic_parsing_in_context/models/transition_functions/basic_transition_function.py  (无关命中)\"\n  },\n  \"smoke_verdict\": \"blocked_code\",\n  \"all_blockers\": [\n    {\n      \"verdict\": \"blocked_code\",\n      \"confirmed_by\": \"static\",\n      \"detail\": \"论文对应的 knowledge_intensive_text_to_sql/ 目录里除了一行 'Coming soon' 的 README 外没有任何文件:无训练/评测脚本、无模型代码、无配置。全仓库搜索 KnowSQL / ReGrouP 无实现。不存在可执行的入口,因此无法构造任何运行错误作为证据——不改代码(即从零补全整个实现)就绝无可能跑通。\"\n    },\n    {\n      \"verdict\": \"blocked_data_link_dead\",\n      \"confirmed_by\": \"static\",\n      \"detail\": \"KnowSQL benchmark 论文声称随代码发布,但仓库未附带;WebSearch 在 arXiv/ACL/作者主页均未找到实际下载链接,也无 HuggingFace 镜像或第三方复现。\"\n    }\n  ],\n  \"blocker_attribution\": \"genuine\",\n  \"verdict_reason\": \"该论文的代码从未真正发布,目录里只有一句 'Coming soon' 的占位 README,数据集 KnowSQL 也无任何可获取来源,连入口都不存在。\"\n}\n```\n\n补充说明:此处 `blocked_code` 没有执行证据,是因为「根本没有文件可以执行」——我已用目录列举 + 全仓库 grep 作为该事实的直接证据,这比运行报错更强。虽然数据(L3)也不可得,但按「同层优先 genuine / 最早致命」原则,缺代码是更根本的阻塞,即便拿到数据也无从运行。\n\nSources:\n- [ACL Anthology: 2022.emnlp-main.350](https://aclanthology.org/2022.emnlp-main.350/)\n- [arXiv:2301.01067](https://arxiv.org/abs/2301.01067)\n- [作者 slides](https://longxudou.github.io/data/emnlp2022-knowsql/slides-knowsql.pdf)",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/2022.emnlp-main.350/",
+    "entrypoint": {
+      "command": null,
+      "source": "不存在。knowledge_intensive_text_to_sql/README.md 全文为 'Code and dataset are under cleaning. Coming soon.'(仓库快照日期 2023-11-10,论文发表于 2022-10)"
+    },
+    "env_analysis": {
+      "python_version_required": "unknown",
+      "framework_required": "unknown",
+      "evidence": "子目录内无 setup.py / requirements.txt / 任何 .py 文件,无法推断"
+    },
+    "external_apis": [],
+    "data": {
+      "datasets_needed": [
+        "KnowSQL (论文自建 benchmark)"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "KnowSQL",
+          "state": "link_dead",
+          "source": "论文称 'Code and data are available at' 本仓库,但仓库只有占位 README;WebSearch 未找到任何官方或第三方发布的 KnowSQL 下载点",
+          "version_uncertain": true
+        }
+      ],
+      "used_for_smoke": "none"
+    },
+    "docker": {
+      "images_tried": [],
+      "image_used": null,
+      "pull_success": null,
+      "run_command": null
+    },
+    "install": {
+      "status": "skipped",
+      "log_tail": "无 requirements/setup,无可安装内容"
+    },
+    "run": {
+      "command": null,
+      "status": "skipped: no code and no runnable data in the repository",
+      "output_tail": "$ ls knowledge_intensive_text_to_sql/*\nknowledge_intensive_text_to_sql/README.md\n$ cat knowledge_intensive_text_to_sql/README.md\nCode and dataset are under cleaning. Coming soon.\n$ grep -ril 'knowsql\\|regroup' .\n./semantic_parsing_in_context/models/transition_functions/basic_transition_function.py  (无关命中)"
+    },
+    "smoke_verdict": "blocked_code",
+    "all_blockers": [
+      {
+        "verdict": "blocked_code",
+        "confirmed_by": "static",
+        "detail": "论文对应的 knowledge_intensive_text_to_sql/ 目录里除了一行 'Coming soon' 的 README 外没有任何文件:无训练/评测脚本、无模型代码、无配置。全仓库搜索 KnowSQL / ReGrouP 无实现。不存在可执行的入口,因此无法构造任何运行错误作为证据——不改代码(即从零补全整个实现)就绝无可能跑通。"
+      },
+      {
+        "verdict": "blocked_data_link_dead",
+        "confirmed_by": "static",
+        "detail": "KnowSQL benchmark 论文声称随代码发布,但仓库未附带;WebSearch 在 arXiv/ACL/作者主页均未找到实际下载链接,也无 HuggingFace 镜像或第三方复现。"
+      }
+    ],
+    "blocker_attribution": "genuine",
+    "verdict_reason": "该论文的代码从未真正发布,目录里只有一句 'Coming soon' 的占位 README,数据集 KnowSQL 也无任何可获取来源,连入口都不存在。"
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v12_smoke_docker__default__microsoft-ContextualSP-369743e__9fbb9bfe.jsonl"
+}

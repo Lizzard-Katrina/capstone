@@ -1,0 +1,35 @@
+计划运行 60 次 (60 仓库 x 1 变体 x 1 模型 x 1 次重复)
+
+[已有结果,跳过] ayyoobimani/glp-pos
+[已有结果,跳过] passing2961/empgpt-3
+[已有结果,跳过] cpethe/chapter-captor
+[已有结果,跳过] orishapira/interexp
+[已有结果,跳过] senticnet/conv-emotion
+[已有结果,跳过] brihijoshi/granular-similarity-coling-2020
+[已有结果,跳过] armankazmi/linguistic-features-of-text
+[1/60] adjust_cwe | v13_smoke_repro | default | run 1
+    calls=19 denials=1 744.5s verdict=smoke_passed_toy
+[2/60] hypmix-emnlp | v13_smoke_repro | default | run 1
+    calls=19 denials=0 1741.9s verdict=blocked_code
+[3/60] simcls | v13_smoke_repro | default | run 1
+    calls=20 denials=0 3600.0s verdict=None
+[4/60] artificial-languages | v13_smoke_repro | default | run 1
+    calls=17 denials=1 784.0s verdict=blocked_code
+[5/60] document-level-sentiment-analysis-with-user-and-product-context | v13_smoke_repro | default | run 1
+    calls=43 denials=1 3660.0s verdict=blocked_code
+[6/60] gradlre | v13_smoke_repro | default | run 1
+    calls=15 denials=1 1667.6s verdict=blocked_hardware
+[7/60] pl-marker | v13_smoke_repro | default | run 1
+    calls=36 denials=0 2133.6s verdict=smoke_passed
+[8/60] snli_logic | v13_smoke_repro | default | run 1
+    calls=31 denials=0 3599.1s verdict=None
+[9/60] c2f-far | v13_smoke_repro | default | run 1
+    calls=25 denials=1 1106.1s verdict=blocked_code
+[10/60] is-bert | v13_smoke_repro | default | run 1
+    calls=18 denials=0 1896.3s verdict=blocked_hardware
+[11/60] cr-walker | v13_smoke_repro | default | run 1
+    calls=47 denials=0 3599.0s verdict=None
+
+已到 6.0 小时,不再开始新仓库。
+
+完成。接下来跑 src.verify 和 src.analyze。

@@ -1,0 +1,243 @@
+{
+  "run_id": "cecb464e",
+  "repo": "OriShapira-InterExp-bb2f2fe",
+  "variant": "v13_smoke_repro",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 478.0,
+  "n_events": 141,
+  "tool_call_count_actual": 21,
+  "num_turns": 22,
+  "total_cost_usd": 1.0635645,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "session_timed_out": false,
+  "leftover_containers_killed": [],
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la; echo ---; cat README.md 2>/dev/null | head -100"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -R data | head -50; echo ---; ls QFSE evaluation evaluation/* | head -60; echo ---; find . -name \"requirements*\" -o -name \"setup.py\" | head"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls data/DUC2006Clean/D0601; cat data/Config.py | head -40; echo ---; grep -rhn \"^import\\|^from\" QFSE/*.py evaluation/*.py | sed 's/.*:\\(.*\\)/\\1/' | sort -u"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat QFSE/Utilities.py; echo ===; head -60 evaluation/simulations/simulationEvaluation.py; echo ===; head -30 evaluation/RougeEvaluator.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls evaluation/simulations/ | grep -i oracle; ls evaluation | grep -i lite; ls ROUGE-1.5.5; grep -rn \"ROUGE_HOME\\|rouge_dir\\|Rouge155(\" evaluation/RougeEvaluator.py; echo ---; head -40 QFSE/Main.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/img && cat > /tmp/img/Dockerfile <<'EOF'\nFROM python:3.7-slim\nRUN apt-get update && apt-get install -y --no-install-recommends perl build-essential libxml-parser-perl libdb-dev && rm -rf /var/lib/apt/lists/*\nRUN pip install \"spacy==2.2.4\" \"pytextrank==2.0.3\" nltk scikit-learn sumy pyrouge rouge python-Levenshtein matplotlib numpy\nRUN python -m spacy download en_core_web_md\nRUN python -c \"import nltk; nltk.download('punkt'); nltk.download('stopwords')\"\nEOF\ndocker build -t interexp /tmp/img 2>&1 | tail -20",
+        "timeout": 600000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat > /tmp/img/Dockerfile <<'EOF'\nFROM python:3.7-slim\nRUN apt-get update && apt-get install -y --no-install-recommends perl build-essential libxml-parser-perl libdb-dev wget && rm -rf /var/lib/apt/lists/*\nRUN pip install -U \"pip<24\" \"setuptools<60\" wheel\nRUN pip install \"numpy==1.19.5\" \"scikit-learn==0.23.2\" \"spacy==2.2.4\"\nRUN pip install \"pytextrank==2.0.3\" nltk sumy pyrouge rouge python-Levenshtein \"matplotlib==3.3.4\"\nRUN python -m spacy download en_core_web_md\nRUN python -c \"import nltk; nltk.download('punkt'); nltk.download('stopwords')\"\nEOF\ndocker build -t interexp /tmp/img 2>&1 | tail -25",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm python:3.7-slim bash -c 'pip install -q -U \"pip<24\" \"setuptools<60\" wheel 2>&1 | tail -2; pip install \"numpy==1.19.5\" 2>&1 | tail -30'",
+        "timeout": 300000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat > /tmp/img/Dockerfile <<'EOF'\nFROM python:3.7-slim\nRUN apt-get update && apt-get install -y --no-install-recommends perl build-essential libxml-parser-perl libdb-dev wget && rm -rf /var/lib/apt/lists/*\nRUN pip install -U \"pip<24\" \"setuptools<60\" wheel\nRUN pip install \"numpy==1.19.5\" \"scikit-learn==0.24.2\" \"spacy==2.3.7\"\nRUN pip install \"pytextrank==2.0.3\" nltk sumy pyrouge rouge python-Levenshtein \"matplotlib==3.3.4\"\nRUN python -m spacy download en_core_web_md\nRUN python -c \"import nltk; nltk.download('punkt'); nltk.download('stopwords')\"\nEOF\ndocker build -t interexp /tmp/img 2>&1 | tail -15",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm python:3.7-slim bash -c 'pip install -q -U \"pip<24\" \"setuptools<60\" wheel >/dev/null 2>&1; pip install \"spacy==2.3.7\" 2>&1 | grep -v \"^  Down\\|^Collecting\\|━\" | head -40'",
+        "timeout": 400000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm python:3.7-slim bash -c 'pip install -q -U \"pip<24\" \"setuptools<60\" wheel >/dev/null 2>&1; pip install --only-binary :all: \"spacy==2.3.7\" 2>&1 | tail -8'",
+        "timeout": 400000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat > /tmp/img/Dockerfile <<'EOF'\nFROM python:3.7-slim\nRUN apt-get update && apt-get install -y --no-install-recommends perl build-essential libxml-parser-perl libdb-dev wget && rm -rf /var/lib/apt/lists/*\nRUN pip install -U \"pip<24\" \"setuptools<60\" wheel\nRUN pip install --only-binary :all: \"numpy==1.19.5\" \"scikit-learn==0.24.2\" \"spacy==2.3.7\" \"matplotlib==3.3.4\"\nRUN pip install --prefer-binary \"pytextrank==2.0.3\" nltk sumy pyrouge rouge python-Levenshtein\nRUN python -m spacy download en_core_web_md\nRUN python -c \"import nltk; nltk.download('punkt'); nltk.download('stopwords')\"\nEOF\ndocker build -t interexp /tmp/img 2>&1 | tail -12",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 40,100p QFSE/Main.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo 2>/dev/null; cd /tmp/repo;\npyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | tail -40'",
+        "timeout": 700000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo;\npyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | tail -40'",
+        "timeout": 700000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo; chmod -R u+rwX /tmp/repo;\npyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | grep -v \"INFO\\|^2026\" | tail -40'",
+        "timeout": 700000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo; chmod -R u+rw /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl;\npyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | grep -iv \"INFO\\|^2026\" | tail -15\necho \"=== simulationEvaluation ===\"\nPYTHONPATH=. timeout 300 python evaluation/simulations/simulationEvaluation.py 2>&1 | tail -8'",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo; chmod -R u+rw /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl;\ncd /tmp/repo/ROUGE-1.5.5/data/WordNet-2.0-Exceptions && rm -f WordNet-2.0.exc.db && perl buildExeptionDB.pl . exc WordNet-2.0.exc.db && cp WordNet-2.0.exc.db ../ ;\ncd /tmp/repo; pyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | grep -iv \"INFO:\\|^2026\" | tail -20'",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "tail -30 \"/home/katrinalinux/.claude/projects/-home-katrinalinux-prompt-exp-workdir-orishapira-interexp-OriShapira-InterExp-bb2f2fe/c12e1995-762a-4f78-861a-4e3410981266/tool-results/b31mk1dq3.txt\""
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp && docker run --rm -v \"/home/katrinalinux/prompt-exp-workdir/orishapira-interexp/OriShapira-InterExp-bb2f2fe\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo; chmod -R u+rw /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl;\ncd /tmp/repo/ROUGE-1.5.5/data/WordNet-2.0-Exceptions && rm -f WordNet-2.0.exc.db && perl buildExeptionDB.pl . exc WordNet-2.0.exc.db >/dev/null && cp WordNet-2.0.exc.db ../ ;\ncd /tmp/repo; pyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | grep -i \"rouge\\|Failed\" | head -10'",
+        "timeout": 900000
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "docker run --rm -v \"$PWD\":/repo:ro interexp bash -c '\ncp -r /repo /tmp/repo; cd /tmp/repo; chmod -R u+rw /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl;\ncd /tmp/repo/ROUGE-1.5.5/data/WordNet-2.0-Exceptions && rm -f WordNet-2.0.exc.db && perl buildExeptionDB.pl . exc WordNet-2.0.exc.db >/dev/null && cp WordNet-2.0.exc.db ../ ;\ncd /tmp/repo; pyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5 >/dev/null 2>&1;\necho \"*exit\" | PYTHONPATH=. timeout 600 python QFSE/Main.py \"Steroid Use\" 2>&1 | grep -i \"rouge\\|Failed\\|Error\" | head -10'",
+        "timeout": 900000
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1791409800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "诊断完成。摘要:仓库自带 DUC2006Clean 真实数据,用 Python 3.7 + spacy 2.3.7 容器成功跑通交互式摘要主流程(含 ROUGE)。但论文主评测脚本 `simulationEvaluation.py` 因仓库缺失 `evaluation/litepyramid/` 模块无法运行。\n\n```json\n{\n  \"paper_url\": \"https://aclanthology.org/2021.naacl-main.54/\",\n  \"entrypoint\": {\n    \"command\": \"PYTHONPATH=. python QFSE/Main.py \\\"Steroid Use\\\"   (论文主评测: PYTHONPATH=. python evaluation/simulations/simulationEvaluation.py)\",\n    \"source\": \"README \\\"QFSE / Main\\\" 段 与 \\\"Evaluating a Summarizer / Simulations\\\" 段\",\n    \"written_by_agent\": false,\n    \"agent_script\": null\n  },\n  \"env_analysis\": {\n    \"python_version_required\": \"3.6-3.7\",\n    \"framework_required\": \"spacy 2.x (nlp.add_pipe(tr.PipelineComponent) 为 spaCy 2 API) + pytextrank 2.0.x + en_core_web_md + scikit-learn + nltk + sumy + pyrouge + Perl ROUGE-1.5.5(仓库自带)\",\n    \"evidence\": \"无 requirements.txt/setup.py;依据 QFSE/Utilities.py 中 spaCy 2 风格 add_pipe 和 pytextrank.TextRank() 旧 API、仓库 2021-2022 年代、evaluation/RougeEvaluator.py 使用 pyrouge.Rouge155\"\n  },\n  \"external_apis\": [],\n  \"data\": {\n    \"datasets_needed\": [\"DUC 2006 (cleaned subset, 22 topics)\", \"LitePyramids SCU 标注(论文 litepyramid 评测用)\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\"dataset\": \"DUC2006Clean (documents + referenceSummaries + questions)\", \"state\": \"in_repo\", \"source\": \"data/DUC2006Clean/D06xx/\", \"version_uncertain\": false},\n      {\"dataset\": \"LitePyramids sentence2scuMap.json\", \"state\": \"link_dead\", \"source\": \"README 指向 evaluation/litepyramid/sentence2scuMap.json,该目录在仓库中不存在\", \"version_uncertain\": false}\n    ],\n    \"used_for_smoke\": \"real\"\n  },\n  \"docker\": {\n    \"images_tried\": [\"python:3.7-slim\"],\n    \"image_used\": \"python:3.7-slim\",\n    \"pull_success\": true,\n    \"run_command\": \"docker run --rm -v $PWD:/repo:ro interexp bash -c 'cp -r /repo /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl; (cd /tmp/repo/ROUGE-1.5.5/data/WordNet-2.0-Exceptions && perl buildExeptionDB.pl . exc WordNet-2.0.exc.db && cp WordNet-2.0.exc.db ../); cd /tmp/repo; pyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5; echo \\\"*exit\\\" | PYTHONPATH=. python QFSE/Main.py \\\"Steroid Use\\\"'\"\n  },\n  \"install\": {\n    \"status\": \"success\",\n    \"log_tail\": \"pip install --only-binary :all: numpy==1.19.5 scikit-learn==0.24.2 spacy==2.3.7 matplotlib==3.3.4 → OK;pip install --prefer-binary pytextrank==2.0.3 nltk sumy pyrouge rouge python-Levenshtein → OK;spacy download en_core_web_md → OK。注:不加 --only-binary 时 spacy 2.3.7 的源码构建会失败(构建依赖 cython>=3.1 在 py3.7 上无可用版本),改用预编译 wheel 即解决。\"\n  },\n  \"run\": {\n    \"command\": \"echo '*exit' | PYTHONPATH=. python QFSE/Main.py \\\"Steroid Use\\\"\",\n    \"status\": \"success\",\n    \"output_tail\": \"--- 2.0974843502044678 : Query:  ---\\nEwald, former president of the East German Athletics Association, wrote a book chronicling his control over East German sports.\\nHe understood the coded message: steroids.\\nDespite widespread suspicions raised by the unusually broad shoulders, big muscles and deep voices of some East German athletes over the years, few were ever caught in drug tests.\\nRussian 400-meter runner Svetlana Pospelova tested positive for banned drugs in an out-of- competition test, ...\\n--- Length: 85\\n\\t\\tanabolic steroids\\n\\t\\ttested positive\\n\\t\\teast german\\n...\\n--- 2.30975079536438 : finish ---\\nINFO:global:Running ROUGE with command /tmp/repo/ROUGE-1.5.5/ROUGE-1.5.5.pl -e /tmp/repo/ROUGE-1.5.5/data -c 95 -2 -1 -U -r 1000 -n 4 -w 1.2 -a -m /tmp/tmpuekj6ifg/rouge_conf.xml  (无 'Failed to compute ROUGE',EVALUATE_ON_THE_FLY 的 ROUGE 计算成功)\",\n    \"speed\": \"语料加载 + spaCy 表示约 2.1s/topic,初始摘要生成 <0.3s,每次 on-the-fly ROUGE 约 1-2s;22 个 topic × 10 次查询的完整 simulation 估计 10-20 分钟(但脚本无法启动)\"\n  },\n  \"smoke_verdict\": \"smoke_passed\",\n  \"all_blockers\": [],\n  \"blocker_attribution\": null,\n  \"verdict_reason\": \"用仓库自带的 DUC2006Clean 真实数据在 python:3.7 + spacy 2.3.7 容器中跑通了 QFSE/Main.py 全链路(语料解析 → 聚类摘要 → 建议查询 → ROUGE 评测);但论文主结果对应的 simulationEvaluation.py 因仓库缺失 evaluation/litepyramid 模块而无法运行。\",\n  \"repro\": {\n    \"status\": \"failed\",\n    \"skip_reason\": null,\n    \"estimated_minutes\": 20,\n    \"command\": \"PYTHONPATH=. python evaluation/simulations/simulationEvaluation.py\",\n    \"metric\": null,\n    \"our_value\": null,\n    \"paper_value\": null,\n    \"paper_source\": null,\n    \"match\": null,\n    \"note\": \"论文主评测脚本启动即失败:ModuleNotFoundError: No module named 'evaluation.litepyramid' (simulationEvaluation.py:24, from evaluation.litepyramid.LitePyramidEvaluator import LitePyramidEvaluator)。仓库 evaluation/ 下没有 litepyramid 目录,也没有 README 提到的 sentence2scuMap.json;该 import 无条件执行,即使 LITE_PYRAMID_MAP_FILEPATH='' 也绕不过。要跑通需要新增 evaluation/litepyramid/LitePyramidEvaluator.py 及其 SCU 映射数据(属于改代码/补数据,本次未做)。此失败不影响 smoke_verdict。\"\n  }\n}\n```\n\n**环境侧需注意(非仓库问题)**:仓库只读挂载,需先 `cp -r /repo /tmp/repo`;ROUGE-1.5.5 的 `*.pl` 缺执行位、`data/WordNet-2.0.exc.db` 需用自带的 `buildExeptionDB.pl` 重建(ROUGE 的标准安装步骤);`QFSE/Main.py` 的 `sys.path` 两行被注释(README 已说明),用 `PYTHONPATH=.` 替代而未改代码。",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/2021.naacl-main.54/",
+    "entrypoint": {
+      "command": "PYTHONPATH=. python QFSE/Main.py \"Steroid Use\"   (论文主评测: PYTHONPATH=. python evaluation/simulations/simulationEvaluation.py)",
+      "source": "README \"QFSE / Main\" 段 与 \"Evaluating a Summarizer / Simulations\" 段",
+      "written_by_agent": false,
+      "agent_script": null
+    },
+    "env_analysis": {
+      "python_version_required": "3.6-3.7",
+      "framework_required": "spacy 2.x (nlp.add_pipe(tr.PipelineComponent) 为 spaCy 2 API) + pytextrank 2.0.x + en_core_web_md + scikit-learn + nltk + sumy + pyrouge + Perl ROUGE-1.5.5(仓库自带)",
+      "evidence": "无 requirements.txt/setup.py;依据 QFSE/Utilities.py 中 spaCy 2 风格 add_pipe 和 pytextrank.TextRank() 旧 API、仓库 2021-2022 年代、evaluation/RougeEvaluator.py 使用 pyrouge.Rouge155"
+    },
+    "external_apis": [],
+    "data": {
+      "datasets_needed": [
+        "DUC 2006 (cleaned subset, 22 topics)",
+        "LitePyramids SCU 标注(论文 litepyramid 评测用)"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "DUC2006Clean (documents + referenceSummaries + questions)",
+          "state": "in_repo",
+          "source": "data/DUC2006Clean/D06xx/",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "LitePyramids sentence2scuMap.json",
+          "state": "link_dead",
+          "source": "README 指向 evaluation/litepyramid/sentence2scuMap.json,该目录在仓库中不存在",
+          "version_uncertain": false
+        }
+      ],
+      "used_for_smoke": "real"
+    },
+    "docker": {
+      "images_tried": [
+        "python:3.7-slim"
+      ],
+      "image_used": "python:3.7-slim",
+      "pull_success": true,
+      "run_command": "docker run --rm -v $PWD:/repo:ro interexp bash -c 'cp -r /repo /tmp/repo; chmod +x /tmp/repo/ROUGE-1.5.5/*.pl; (cd /tmp/repo/ROUGE-1.5.5/data/WordNet-2.0-Exceptions && perl buildExeptionDB.pl . exc WordNet-2.0.exc.db && cp WordNet-2.0.exc.db ../); cd /tmp/repo; pyrouge_set_rouge_path /tmp/repo/ROUGE-1.5.5; echo \"*exit\" | PYTHONPATH=. python QFSE/Main.py \"Steroid Use\"'"
+    },
+    "install": {
+      "status": "success",
+      "log_tail": "pip install --only-binary :all: numpy==1.19.5 scikit-learn==0.24.2 spacy==2.3.7 matplotlib==3.3.4 → OK;pip install --prefer-binary pytextrank==2.0.3 nltk sumy pyrouge rouge python-Levenshtein → OK;spacy download en_core_web_md → OK。注:不加 --only-binary 时 spacy 2.3.7 的源码构建会失败(构建依赖 cython>=3.1 在 py3.7 上无可用版本),改用预编译 wheel 即解决。"
+    },
+    "run": {
+      "command": "echo '*exit' | PYTHONPATH=. python QFSE/Main.py \"Steroid Use\"",
+      "status": "success",
+      "output_tail": "--- 2.0974843502044678 : Query:  ---\nEwald, former president of the East German Athletics Association, wrote a book chronicling his control over East German sports.\nHe understood the coded message: steroids.\nDespite widespread suspicions raised by the unusually broad shoulders, big muscles and deep voices of some East German athletes over the years, few were ever caught in drug tests.\nRussian 400-meter runner Svetlana Pospelova tested positive for banned drugs in an out-of- competition test, ...\n--- Length: 85\n\t\tanabolic steroids\n\t\ttested positive\n\t\teast german\n...\n--- 2.30975079536438 : finish ---\nINFO:global:Running ROUGE with command /tmp/repo/ROUGE-1.5.5/ROUGE-1.5.5.pl -e /tmp/repo/ROUGE-1.5.5/data -c 95 -2 -1 -U -r 1000 -n 4 -w 1.2 -a -m /tmp/tmpuekj6ifg/rouge_conf.xml  (无 'Failed to compute ROUGE',EVALUATE_ON_THE_FLY 的 ROUGE 计算成功)",
+      "speed": "语料加载 + spaCy 表示约 2.1s/topic,初始摘要生成 <0.3s,每次 on-the-fly ROUGE 约 1-2s;22 个 topic × 10 次查询的完整 simulation 估计 10-20 分钟(但脚本无法启动)"
+    },
+    "smoke_verdict": "smoke_passed",
+    "all_blockers": [],
+    "blocker_attribution": null,
+    "verdict_reason": "用仓库自带的 DUC2006Clean 真实数据在 python:3.7 + spacy 2.3.7 容器中跑通了 QFSE/Main.py 全链路(语料解析 → 聚类摘要 → 建议查询 → ROUGE 评测);但论文主结果对应的 simulationEvaluation.py 因仓库缺失 evaluation/litepyramid 模块而无法运行。",
+    "repro": {
+      "status": "failed",
+      "skip_reason": null,
+      "estimated_minutes": 20,
+      "command": "PYTHONPATH=. python evaluation/simulations/simulationEvaluation.py",
+      "metric": null,
+      "our_value": null,
+      "paper_value": null,
+      "paper_source": null,
+      "match": null,
+      "note": "论文主评测脚本启动即失败:ModuleNotFoundError: No module named 'evaluation.litepyramid' (simulationEvaluation.py:24, from evaluation.litepyramid.LitePyramidEvaluator import LitePyramidEvaluator)。仓库 evaluation/ 下没有 litepyramid 目录,也没有 README 提到的 sentence2scuMap.json;该 import 无条件执行,即使 LITE_PYRAMID_MAP_FILEPATH='' 也绕不过。要跑通需要新增 evaluation/litepyramid/LitePyramidEvaluator.py 及其 SCU 映射数据(属于改代码/补数据,本次未做)。此失败不影响 smoke_verdict。"
+    }
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v13_smoke_repro__default__OriShapira-InterExp-bb2f2fe__cecb464e.jsonl"
+}

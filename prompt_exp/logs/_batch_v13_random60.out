@@ -1,0 +1,22 @@
+计划运行 60 次 (60 仓库 x 1 变体 x 1 模型 x 1 次重复)
+
+[1/60] glp-pos | v13_smoke_repro | default | run 1
+    calls=28 denials=0 1060.6s verdict=smoke_passed
+[2/60] empgpt-3 | v13_smoke_repro | default | run 1
+    calls=24 denials=0 3600.0s verdict=None
+[3/60] chapter-captor | v13_smoke_repro | default | run 1
+    calls=35 denials=0 2449.9s verdict=blocked_hardware
+[4/60] interexp | v13_smoke_repro | default | run 1
+    calls=21 denials=0 478.0s verdict=smoke_passed
+[5/60] conv-emotion | v13_smoke_repro | default | run 1
+    calls=25 denials=0 2909.9s verdict=None
+[6/60] granular-similarity-coling-2020 | v13_smoke_repro | default | run 1
+    calls=37 denials=0 1183.7s verdict=smoke_passed_with_entry
+[7/60] linguistic-features-of-text | v13_smoke_repro | default | run 1
+    calls=26 denials=0 3287.2s verdict=smoke_passed
+[8/60] adjust_cwe | v13_smoke_repro | default | run 1
+    calls=23 denials=0 2748.6s verdict=None
+[9/60] hypmix-emnlp | v13_smoke_repro | default | run 1
+    calls=0 denials=0 2.3s verdict=None
+
+连续 2 次登录 / 认证错误,停止。先 `claude -p ok` 检查登录,再加 --skip-done 续跑。

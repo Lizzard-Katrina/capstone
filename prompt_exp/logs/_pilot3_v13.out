@@ -1,0 +1,16 @@
+计划运行 6 次 (6 仓库 x 1 变体 x 1 模型 x 1 次重复)
+
+[1/6] disco4textcat | v13_smoke_repro | default | run 1
+    calls=8 denials=0 78.4s verdict=blocked_data_link_dead
+[2/6] topically-driven-language-model | v13_smoke_repro | default | run 1
+    calls=9 denials=1 285.8s verdict=smoke_passed_toy
+[3/6] deep_enhanced_repr_for_idrr | v13_smoke_repro | default | run 1
+    calls=6 denials=0 63.6s verdict=blocked_data_licensed
+[4/6] quaterniontransformers | v13_smoke_repro | default | run 1
+    calls=17 denials=0 1552.1s verdict=blocked_deps_removed
+[5/6] lm-steganography | v13_smoke_repro | default | run 1
+    calls=28 denials=2 1146.7s verdict=smoke_passed
+[6/6] contextualsp | v13_smoke_repro | default | run 1
+    calls=6 denials=0 51.2s verdict=blocked_code_unreleased
+
+完成。接下来跑 src.verify 和 src.analyze。

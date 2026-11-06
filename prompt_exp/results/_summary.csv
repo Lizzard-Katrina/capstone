@@ -1,0 +1,2 @@
+variant,model,n_runs,parsed_ok_rate,trustworthy_rate,tried_to_write_rate,extra_install_rate,bad_entry_rate,tool_calls_mean,elapsed_mean,accuracy
+v5_refined,default,5,1.0,0.8,0.0,0.0,0.0,7.2,57.7,
