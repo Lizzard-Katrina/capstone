@@ -9,8 +9,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import signal
 import subprocess
+import threading
 import time
 import uuid
 from pathlib import Path
@@ -56,6 +59,28 @@ def extract_json(text: str) -> dict | None:
     return None
 
 
+def _running_containers() -> set[str]:
+    try:
+        return set(subprocess.run(["docker", "ps", "-q", "--no-trunc"], capture_output=True,
+                                  text=True, timeout=30).stdout.split())
+    except (OSError, subprocess.SubprocessError):
+        return set()
+
+
+def _kill_new_containers(before: set[str]) -> list[str]:
+    """杀掉会话期间新起、到结束还在跑的容器。
+    agent 会把仓库拷到 /tmp 再挂载、或者 `docker run -d ... sleep infinity`,按挂载路径认不全,
+    所以按会话前后的差集来认。前提是同一时间只跑一个会话(run_experiment 是串行的)。"""
+    killed = []
+    for cid in _running_containers() - before:
+        try:
+            subprocess.run(["docker", "rm", "-f", cid], capture_output=True, timeout=60)
+            killed.append(cid[:12])
+        except (OSError, subprocess.SubprocessError):
+            pass
+    return killed
+
+
 def run_one(repo_path: Path, variant: str, cfg: dict,
             model: str | None = None, run_id: str | None = None,paper_url: str | None = None) -> dict:
     """对一个仓库跑一次 Claude Code 诊断。"""
@@ -70,13 +95,13 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
     system_prompt = load_prompt(variant, cfg.get("max_tool_calls", 40))
     user_prompt = (
         f"请诊断当前目录这个仓库: {repo_path.name}\n"
-        f"当前工作目录就是仓库根目录。开始吧。"
+        f"当前工作目录就是仓库根目录。\n"
     )
     if paper_url:
         user_prompt += f"对应的论文地址: {paper_url}\n"
     user_prompt += "开始吧。"
 
-    if variant.startswith(("v6", "v8", "v9","v10","v11")):
+    if variant.startswith(("v6", "v8", "v9", "v10", "v11", "v12", "v13")):
         tools = "Bash,Read,Glob,Grep,WebFetch,WebSearch"
     else:
         tools = ALLOWED_TOOLS
@@ -84,7 +109,7 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
     cmd = [
         "claude", "-p", user_prompt,
         "--system-prompt", system_prompt,
-        "--tools", ALLOWED_TOOLS,
+        "--tools", tools,
         "--disallowedTools", DISALLOWED_TOOLS,
         "--output-format", "stream-json",
         "--verbose",    
@@ -95,19 +120,37 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
     if model:
         cmd += ["--model", model]
 
+    containers_before = _running_containers()
     t0 = time.time()
     events: list[dict] = []
     final_text = ""
+    all_texts: list[str] = []
     result_meta: dict = {}
     stderr_tail = ""
     proc = None
+    timed_out = threading.Event()
+    session_timeout = cfg.get("session_timeout_sec", 2400)
+
+    def _kill_on_timeout():
+        timed_out.set()
+        if proc and proc.poll() is None:
+            # 杀整个进程组:只杀 claude 的话,它起的 bash 子进程还占着 stdout,读循环不会结束
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+
+    # 读 stdout 的循环会一直阻塞到进程结束,所以超时必须靠计时器从外面杀进程
+    watchdog = threading.Timer(session_timeout, _kill_on_timeout)
 
     try:
         proc = subprocess.Popen(
             cmd, cwd=repo_path,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             text=True, bufsize=1,
+            start_new_session=True,
         )
+        watchdog.start()
         with open(log_path, "w", encoding="utf-8") as lf:
             for line in proc.stdout:
                 line = line.strip()
@@ -137,19 +180,21 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
                     for blk in (ev.get("message", {}) or {}).get("content", []) or []:
                         if blk.get("type") == "text" and blk.get("text"):
                             final_text = blk["text"]
+                            all_texts.append(blk["text"])
 
-        proc.wait(timeout=cfg.get("session_timeout_sec", 2400))
+        proc.wait()
         stderr_tail = (proc.stderr.read() or "")[-2000:]
         returncode = proc.returncode
-    except subprocess.TimeoutExpired:
-        if proc:
-            proc.kill()
-        returncode = None
-        stderr_tail = "[会话超时,进程已终止]"
+        if timed_out.is_set():
+            returncode = None
+            stderr_tail = f"[会话超时({session_timeout}s),进程已终止]\n" + stderr_tail
     except FileNotFoundError:
         raise RuntimeError("找不到 claude 命令,确认 Claude Code 已安装且在 PATH 里")
+    finally:
+        watchdog.cancel()
 
     elapsed = time.time() - t0
+    leftover = _kill_new_containers(containers_before)
 
     # 从事件流里取出所有工具调用
     tool_uses = []
@@ -176,7 +221,12 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
         if ev.get("type") == "rate_limit_event":
             rate_limit = ev.get("rate_limit_info")
 
+    # agent 输出结论 JSON 之后,后台任务结束时还可能再说几句,所以不能只看最后一条
     parsed = extract_json(final_text)
+    for txt in reversed(all_texts):
+        if parsed is not None:
+            break
+        parsed = extract_json(txt)
 
     record = {
         "run_id": run_id,
@@ -191,6 +241,8 @@ def run_one(repo_path: Path, variant: str, cfg: dict,
         "total_cost_usd": result_meta.get("total_cost_usd"),
         "terminal_reason": result_meta.get("terminal_reason"),
         "session_is_error": result_meta.get("is_error"),
+        "session_timed_out": timed_out.is_set(),
+        "leftover_containers_killed": leftover,
         "api_error_status": result_meta.get("api_error_status"),
         "tool_uses": tool_uses,
         # 用 Claude Code 自己报的 permission_denials,比猜关键词可靠
@@ -232,7 +284,9 @@ def main():
         "cost_usd": rec["total_cost_usd"],
         "elapsed_sec": rec["elapsed_sec"],
         "terminal_reason": rec["terminal_reason"],
-        "verdict": (rec["agent_parsed_json"] or {}).get("overall_verdict"),
+        "verdict": (rec["agent_parsed_json"] or {}).get("smoke_verdict")
+                   or (rec["agent_parsed_json"] or {}).get("repro_verdict")
+                   or (rec["agent_parsed_json"] or {}).get("overall_verdict"),
         "log": rec["trace_log"],
     }, ensure_ascii=False, indent=2))
 

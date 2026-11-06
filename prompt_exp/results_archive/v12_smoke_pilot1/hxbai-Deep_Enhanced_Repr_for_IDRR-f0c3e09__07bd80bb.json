@@ -1,0 +1,144 @@
+{
+  "run_id": "07bd80bb",
+  "repo": "hxbai-Deep_Enhanced_Repr_for_IDRR-f0c3e09",
+  "variant": "v12_smoke_docker",
+  "model": "default",
+  "returncode": 0,
+  "elapsed_sec": 57.2,
+  "n_events": 27,
+  "tool_call_count_actual": 5,
+  "num_turns": 6,
+  "total_cost_usd": 0.1804895,
+  "terminal_reason": "completed",
+  "session_is_error": false,
+  "api_error_status": null,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls -la; echo ---; cat README.md 2>/dev/null | head -100"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat prepare_data.sh; echo ---; find data res -type f | head -40; echo ---; du -sh data; echo ---; cat config.py; echo ---; cat main.py"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rniE \"api_key|token|openai|requests\\.get|urllib|http://|https://\" --include=*.py . | head -20; echo ---; head -30 data/preprocess.py"
+      }
+    },
+    {
+      "name": "WebFetch",
+      "input": {
+        "url": "https://github.com/cgpotts/pdtb2",
+        "prompt": "Does this repo provide pdtb2.csv for download, or does it require an LDC license for PDTB 2.0?"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "curl -s https://pypi.org/pypi/torch/json | python3 -c \"import json,sys;print([v for v in json.load(sys.stdin)['releases'] if v.startswith('0.')])\"; curl -s https://pypi.org/pypi/allennlp/json | python3 -c \"import json,sys;print([v for v in json.load(sys.stdin)['releases'] if v.startswith('0.4')])\""
+      }
+    }
+  ],
+  "permission_denials": [],
+  "error_tool_results": [],
+  "rate_limit": {
+    "status": "allowed",
+    "resetsAt": 1790566800,
+    "rateLimitType": "five_hour",
+    "overageStatus": "rejected",
+    "overageDisabledReason": "out_of_credits",
+    "isUsingOverage": false
+  },
+  "agent_final_text": "```json\n{\n  \"paper_url\": \"https://aclanthology.org/C18-1048/\",\n  \"entrypoint\": {\"command\": \"bash ./prepare_data.sh && python main.py train 1\", \"source\": \"README Usage 段\"},\n  \"env_analysis\": {\n    \"python_version_required\": \"3.6.4\",\n    \"framework_required\": \"pytorch 0.3.1, allennlp 0.4.1, gensim 3.1.0, nltk 3.2.5, scikit-learn 0.19.1, tensorboardX 1.0\",\n    \"evidence\": \"README Requirements 段\"\n  },\n  \"external_apis\": [],\n  \"data\": {\n    \"datasets_needed\": [\"PDTB 2.0 (pdtb2.csv from cgpotts/pdtb2)\", \"GoogleNews-vectors-negative300.bin.gz\", \"ELMo 2x4096_512_2048cnn_2xhighway options+weights\"],\n    \"toy_data_in_repo\": false,\n    \"status\": [\n      {\"dataset\": \"PDTB 2.0 / pdtb2.csv\", \"state\": \"licensed\", \"source\": \"https://github.com/cgpotts/pdtb2 — CSV 下载为密码保护,仅发给持有 LDC PDTB 2.0 许可的人\", \"version_uncertain\": false},\n      {\"dataset\": \"GoogleNews word2vec 300d\", \"state\": \"public_manual\", \"source\": \"Google Drive / 镜像,~1.6GB 压缩\", \"version_uncertain\": false},\n      {\"dataset\": \"ELMo original 5.5B/original weights\", \"state\": \"public_auto\", \"source\": \"allennlp s3 公开直链\", \"version_uncertain\": true},\n      {\"dataset\": \"pre-trained weights (eval 用)\", \"state\": \"public_manual\", \"source\": \"Google Drive 链接,需浏览器确认\", \"version_uncertain\": false}\n    ],\n    \"used_for_smoke\": \"none\"\n  },\n  \"docker\": {\n    \"images_tried\": [],\n    \"image_used\": null,\n    \"pull_success\": null,\n    \"run_command\": null\n  },\n  \"install\": {\"status\": \"skipped\", \"log_tail\": \"skipped: 无可运行数据,未起容器\"},\n  \"run\": {\"command\": \"bash ./prepare_data.sh; python main.py train 1\", \"status\": \"skipped: no runnable data\", \"output_tail\": \"\"},\n  \"smoke_verdict\": \"blocked_data_licensed\",\n  \"all_blockers\": [\n    {\"verdict\": \"blocked_data_licensed\", \"confirmed_by\": \"static\", \"detail\": \"主流程第一步 data/preprocess.py 通过 pdtb2.CorpusReader 读 data/raw/pdtb2.csv;仓库 data/raw 下只有 .gitkeep。pdtb2.csv 来自 cgpotts/pdtb2,该页面明确说明下载密码只发给持有 LDC PDTB 2.0 许可者。无公开替代来源(PDTB 2.0 是 LDC 付费语料)。仓库无任何 toy/sample 数据。\"},\n    {\"verdict\": \"blocked_data_manual\", \"confirmed_by\": \"static\", \"detail\": \"config.py 还要求本地 GoogleNews-vectors-negative300.bin.gz(>2GB 解压,Google Drive 手动下载)和 ELMo options/weights 本地路径;eval 所需 weights 目录也是 Google Drive 手动下载。attribution 属 pipeline。\"},\n    {\"verdict\": \"blocked_deps_conflict\", \"confirmed_by\": \"static\", \"detail\": \"未执行验证。torch 0.3.1 已不在 PyPI(releases 中无 0.x 版本),只能从 download.pytorch.org 旧 wheel 装且仅限 py3.6/cp36 linux;allennlp 0.4.1 仍在 PyPI。因数据层更早阻塞,未起容器实测。\"}\n  ],\n  \"blocker_attribution\": \"genuine\",\n  \"verdict_reason\": \"主实验必需的 PDTB 2.0 语料需 LDC 付费许可、仓库无任何 toy 数据,故无法跑 smoke test(未起 Docker);次要还有 torch 0.3.1 已从 PyPI 下架的环境风险。\"\n}\n```",
+  "agent_parsed_json": {
+    "paper_url": "https://aclanthology.org/C18-1048/",
+    "entrypoint": {
+      "command": "bash ./prepare_data.sh && python main.py train 1",
+      "source": "README Usage 段"
+    },
+    "env_analysis": {
+      "python_version_required": "3.6.4",
+      "framework_required": "pytorch 0.3.1, allennlp 0.4.1, gensim 3.1.0, nltk 3.2.5, scikit-learn 0.19.1, tensorboardX 1.0",
+      "evidence": "README Requirements 段"
+    },
+    "external_apis": [],
+    "data": {
+      "datasets_needed": [
+        "PDTB 2.0 (pdtb2.csv from cgpotts/pdtb2)",
+        "GoogleNews-vectors-negative300.bin.gz",
+        "ELMo 2x4096_512_2048cnn_2xhighway options+weights"
+      ],
+      "toy_data_in_repo": false,
+      "status": [
+        {
+          "dataset": "PDTB 2.0 / pdtb2.csv",
+          "state": "licensed",
+          "source": "https://github.com/cgpotts/pdtb2 — CSV 下载为密码保护,仅发给持有 LDC PDTB 2.0 许可的人",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "GoogleNews word2vec 300d",
+          "state": "public_manual",
+          "source": "Google Drive / 镜像,~1.6GB 压缩",
+          "version_uncertain": false
+        },
+        {
+          "dataset": "ELMo original 5.5B/original weights",
+          "state": "public_auto",
+          "source": "allennlp s3 公开直链",
+          "version_uncertain": true
+        },
+        {
+          "dataset": "pre-trained weights (eval 用)",
+          "state": "public_manual",
+          "source": "Google Drive 链接,需浏览器确认",
+          "version_uncertain": false
+        }
+      ],
+      "used_for_smoke": "none"
+    },
+    "docker": {
+      "images_tried": [],
+      "image_used": null,
+      "pull_success": null,
+      "run_command": null
+    },
+    "install": {
+      "status": "skipped",
+      "log_tail": "skipped: 无可运行数据,未起容器"
+    },
+    "run": {
+      "command": "bash ./prepare_data.sh; python main.py train 1",
+      "status": "skipped: no runnable data",
+      "output_tail": ""
+    },
+    "smoke_verdict": "blocked_data_licensed",
+    "all_blockers": [
+      {
+        "verdict": "blocked_data_licensed",
+        "confirmed_by": "static",
+        "detail": "主流程第一步 data/preprocess.py 通过 pdtb2.CorpusReader 读 data/raw/pdtb2.csv;仓库 data/raw 下只有 .gitkeep。pdtb2.csv 来自 cgpotts/pdtb2,该页面明确说明下载密码只发给持有 LDC PDTB 2.0 许可者。无公开替代来源(PDTB 2.0 是 LDC 付费语料)。仓库无任何 toy/sample 数据。"
+      },
+      {
+        "verdict": "blocked_data_manual",
+        "confirmed_by": "static",
+        "detail": "config.py 还要求本地 GoogleNews-vectors-negative300.bin.gz(>2GB 解压,Google Drive 手动下载)和 ELMo options/weights 本地路径;eval 所需 weights 目录也是 Google Drive 手动下载。attribution 属 pipeline。"
+      },
+      {
+        "verdict": "blocked_deps_conflict",
+        "confirmed_by": "static",
+        "detail": "未执行验证。torch 0.3.1 已不在 PyPI(releases 中无 0.x 版本),只能从 download.pytorch.org 旧 wheel 装且仅限 py3.6/cp36 linux;allennlp 0.4.1 仍在 PyPI。因数据层更早阻塞,未起容器实测。"
+      }
+    ],
+    "blocker_attribution": "genuine",
+    "verdict_reason": "主实验必需的 PDTB 2.0 语料需 LDC 付费许可、仓库无任何 toy 数据,故无法跑 smoke test(未起 Docker);次要还有 torch 0.3.1 已从 PyPI 下架的环境风险。"
+  },
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v12_smoke_docker__default__hxbai-Deep_Enhanced_Repr_for_IDRR-f0c3e09__07bd80bb.jsonl"
+}

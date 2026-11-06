@@ -1,8 +1,8 @@
 # Claude Code 版实验参数。token 相关已移除(订阅制下不关心)。
 sample_size: 25
 repeats: 3
-max_tool_calls: 40          # 写进 prompt 的软上限
-session_timeout_sec: 2400   # 单个仓库整体超时(40 分钟),硬杀
+max_tool_calls: 60          # 写进 prompt 的软上限(v13 多了限时复现,从 40 调到 60)
+session_timeout_sec: 3600   # 单个仓库整体超时(60 分钟),硬杀。v13 的复现单次最多 30 分钟
 variants:
   - v5_refined              # 主力
   - v0_baseline

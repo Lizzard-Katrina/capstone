@@ -1,0 +1,23 @@
+{
+  "run_id": "626f84a9",
+  "repo": "falcondai-lm-steganography-f0ee4b0",
+  "variant": "v12_smoke_docker",
+  "model": "default",
+  "returncode": 1,
+  "elapsed_sec": -25.1,
+  "n_events": 3,
+  "tool_call_count_actual": 0,
+  "num_turns": 1,
+  "total_cost_usd": 0,
+  "terminal_reason": "api_error",
+  "session_is_error": true,
+  "api_error_status": 403,
+  "tool_uses": [],
+  "permission_denials": [],
+  "error_tool_results": [],
+  "rate_limit": null,
+  "agent_final_text": "Failed to authenticate. API Error: 403 Request not allowed",
+  "agent_parsed_json": null,
+  "stderr_tail": "",
+  "trace_log": "/home/katrinalinux/prompt_exp/logs/v12_smoke_docker__default__falcondai-lm-steganography-f0ee4b0__626f84a9.jsonl"
+}
